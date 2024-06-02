@@ -3,8 +3,8 @@ jwt:
   secret: Aa123456
   access_token_duration: 1800
   refresh_token_duration: 10
-mysql:
-  connection: "root:@tcp(localhost:3306)/happy_insight?charset=utf8mb4,utf8&parseTime=true"
+postgres:
+  connection: "postgres://remind_user:haFaMrzhWE0sFRMgHqdRrd6V4lBZniLY@dpg-cpduaf7sc6pc73970qk0-a.oregon-postgres.render.com/remind"
 school_id: sch-f921853e-e89a-4527-b421-bfff80d641d3
 redis:
-  connection: "root:@tcp(localhost:3306)/happy_insight?charset=utf8mb4,utf8&parseTime=true"
+  connection: "123213123131"

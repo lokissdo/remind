@@ -9,6 +9,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+
 type YAML struct {
 	Port int `yaml:"port" validate:"required"`
 	JWT  struct {
@@ -17,10 +18,11 @@ type YAML struct {
 		RefreshTokenDuration int    `yaml:"refresh_token_duration" default:"60"`
 		Iuser                string `yaml:"iuser" default:"todo"`
 	} `yaml:"jwt" validate:"required"`
-	MySQL struct {
+	PostgresQL struct {
 		Connection string `yaml:"connection" validate:"required"`
-		Driver     string `yaml:"driver" default:"mysql"`
-	} `yaml:"mysql" validate:"required"`
+		Driver     string `yaml:"driver" default:"postgres"`
+	} `yaml:"postgres" validate:"required"`
+	
 	AppEnvironment string `yaml:"app_environment" default:"development"`
 	Log            struct {
 		Level string `yaml:"level" default:"debug"`

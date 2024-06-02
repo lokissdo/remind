@@ -13,7 +13,7 @@ import (
 	"todo/common/configs"
 	"todo/model"
 
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	// "path/filepath"
@@ -39,7 +39,7 @@ func initGorm() {
 			Colorful:                  false,       // Disable color
 		},
 	)
-	Db, err = gorm.Open(mysql.Open(configs.Yaml.MySQL.Connection), &gorm.Config{
+	Db, err = gorm.Open(postgres.Open(configs.Yaml.PostgresQL.Connection), &gorm.Config{
 		Logger: newLogger,
 	})
 	if err != nil {
@@ -56,12 +56,7 @@ func initGorm() {
 	if err := sqlDB.Ping(); err != nil {
 		panic(err)
 	}
-	err = Db.Debug().AutoMigrate(&models.School{}, &models.Class{},
-		&models.Parent{}, &models.Student{}, &models.Teacher{}, &models.TeacherTeachClass{},
-		&models.Psychologist{}, &models.Calendar{}, &models.Appointment{},
-		&models.Test{}, models.TestAssignToClass{}, &models.StudentResult{},
-		&models.User{}, &models.UserRole{}, &models.Claims{}, &models.Journal{},
-		&models.ChatRoom{}, &models.ChatMessage{}, &models.ConsultationHistory{}, &models.Mail{})
+	err = Db.Debug().AutoMigrate(&model.Todo{}, &model.Reminder{})
 	if err != nil {
 		log.Fatal("Error migrating database:", err)
 		return

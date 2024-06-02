@@ -7,11 +7,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
+	"github.com/jackc/pgconn"
 )
 
-// set response base on the error
+// SetResponseError sets the response based on the error
 func SetResponseError(c *gin.Context, err error) {
 	c.Set("error", err.Error())
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -27,27 +27,24 @@ func SetResponseError(c *gin.Context, err error) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
-	if _, ok := err.(validator.ValidationErrors); ok{
+	if _, ok := err.(validator.ValidationErrors); ok {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
 
-	
-	if mysqlErr, ok := err.(*mysql.MySQLError); ok {
-		switch mysqlErr.Number {
-		case 1062:
+	if pgErr, ok := err.(*pgconn.PgError); ok {
+		switch pgErr.Code {
+		case "23505":
 			c.JSON(http.StatusConflict, gin.H{"error": "Duplicate entry"})
-		case 1452, 1451, 1216, 1217:
+		case "23503":
 			c.JSON(http.StatusNotFound, gin.H{"error": "Foreign key constraint fails"})
-		case 1406:
+		case "22001":
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Data too long for column"})
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		}
 		return
 	}
-
-	
 
 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 }

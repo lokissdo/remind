@@ -2,11 +2,11 @@ package main
 
 import (
 	"todo/common/configs"
-	"todo/middleware"
+	"todo/api/middleware"
 
 	// _ "todo/repository"
 	//"todo
-
+	api "todo/api"
 	"fmt"
 	"os"
 

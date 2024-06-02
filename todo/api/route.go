@@ -3,17 +3,6 @@ package api
 import (
 	//"happy-insight/api/middleware"
 
-	admin_hix "happy-insight/admin_hix"
-	"happy-insight/admin_shix"
-	"happy-insight/models"
-	"happy-insight/parent"
-	"happy-insight/psychologist"
-	"happy-insight/student"
-	"happy-insight/teacher"
-
-	"happy-insight/api/middleware"
-	"happy-insight/user"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,7 +25,11 @@ func Register(r *gin.Engine) {
 	// }
 
 
-	r.GET()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
 	
 
 }
