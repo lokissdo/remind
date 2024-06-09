@@ -22,4 +22,10 @@ proto:
 	--openapiv2_out=doc/swagger --openapiv2_opt=allow_merge=true,merge_file_name=remind_auth \
 	proto/*.proto
 
-.PHONY: migrate_up migrate_down new_migration sqlc test proto
+redis:
+	docker run --name redis -p 6379:6379 -d redis:7.2.5-alpine
+
+server:
+	go run main.go
+
+.PHONY: migrate_up migrate_down new_migration sqlc test proto redis test server

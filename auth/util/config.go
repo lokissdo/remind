@@ -43,7 +43,7 @@ func LoadConfig(path string) (config Config, err error) {
 	}
 
 	fmt.Printf("Config file used: %s\n", viper.ConfigFileUsed())
-	fmt.Printf("DB source is: %s\n", viper.Get("postgres.db_source"))
+	fmt.Printf("DB source is: %s\n", viper.Get("postgres"))
 
 	err = viper.Unmarshal(&config)
 	if err != nil {

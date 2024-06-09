@@ -6,9 +6,12 @@ import (
 	"github.com/elliotnguyen/auth/pb"
 	"github.com/elliotnguyen/auth/util"
 	"github.com/elliotnguyen/auth/validate"
+	"github.com/elliotnguyen/auth/worker"
+	"github.com/hibiken/asynq"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 )
 
 func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
@@ -30,7 +33,15 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 			Email:          req.GetEmail(),
 		},
 		AfterCreate: func(user db.User) error {
-			return nil
+			taskPayload := &worker.PayloadSendVerifyEmail{
+				Username: user.Username,
+			}
+			opts := []asynq.Option{
+				asynq.MaxRetry(10),
+				asynq.ProcessIn(10 * time.Second),
+				asynq.Queue(worker.QueueCritical),
+			}
+			return server.taskDistributor.DistributeTaskSendVerifyEmail(ctx, taskPayload, opts...)
 		},
 	}
 
