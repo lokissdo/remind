@@ -56,7 +56,7 @@ func initGorm() {
 	if err := sqlDB.Ping(); err != nil {
 		panic(err)
 	}
-	err = Db.Debug().AutoMigrate(&model.Todo{}, &model.Reminder{})
+	err = Db.Debug().AutoMigrate(&model.Todo{}, &model.Reminder{}, &model.FCMToken{})
 	if err != nil {
 		log.Fatal("Error migrating database:", err)
 		return
