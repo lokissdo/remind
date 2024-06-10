@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "/pb";
+
+import "send_message.proto";
+import "add_update_token.proto";
+
+
+
+service NotificationService {
+    rpc AddOrUpdateToken(TokenRequest) returns (TokenResponse) {}
+    rpc SendMessage(MessageRequest) returns (MessageResponse) {}
+}
