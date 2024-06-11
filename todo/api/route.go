@@ -1,35 +1,37 @@
 package api
 
 import (
-	//"happy-insight/api/middleware"
-
 	"github.com/gin-gonic/gin"
+	"todo/service"
 )
 
 func Register(r *gin.Engine) {
-	// do something
-	// r.POST("/login", user.Login)
-	// r.POST("/refresh", user.RefreshToken)
-	// r.POST("/logout", user.Logout)
-	// r.POST("/password", user.ChangePassword)
-	// r.POST("/avatar", user.ChangeAvatar)
-	// go user.CleanUpToken()
-	// apiV1 := r.Group("/api/")
-	// adminHIXRoute := apiV1.Group("/admin-hix")
-	// {
-	// 	adminHIXRoute.Use(middleware.RequiredAuth(models.ADMIN_HIX_ROLE))
-	// 	adminHIXRoute.POST("/school", admin_hix.AddSchool)
-	// 	adminHIXRoute.GET("/school/:school_id", admin_hix.GetSchool)
-	
-
-	// }
-
-
+	// Ping route
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
-	
 
+	// Todo routes
+	todoRoutes := r.Group("/todos")
+	{
+		todoRoutes.POST("/:userID", service.CreateTodo)
+		todoRoutes.GET("/:id", service.GetTodoByID)
+		todoRoutes.GET("/user/:userID", service.ListTodos)
+		todoRoutes.PUT("/:id", service.UpdateTodo)
+		todoRoutes.DELETE("/:id", service.DeleteTodo)
+	}
+
+	// Reminder routes
+	reminderRoutes := r.Group("/reminders")
+	{
+		reminderRoutes.POST("/", service.CreateReminder)
+		reminderRoutes.GET("/user/:userID", service.ListReminders)
+		reminderRoutes.PUT("/:id", service.UpdateReminder)
+		reminderRoutes.DELETE("/:id", service.DeleteReminder)
+	}
+
+	// Run reminder cron job
+	go service.RunReminderCronJob()
 }

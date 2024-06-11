@@ -27,7 +27,7 @@ func Init() error {
         log.Println("Failed to create Firebase messaging client: %v", err)
         return err
     }
-    // test(app)
+    test(app)
     return nil
 }
 

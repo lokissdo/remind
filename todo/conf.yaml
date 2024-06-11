@@ -4,7 +4,9 @@ jwt:
   access_token_duration: 1800
   refresh_token_duration: 10
 postgres:
-  connection: "postgres://remind_user:haFaMrzhWE0sFRMgHqdRrd6V4lBZniLY@dpg-cpduaf7sc6pc73970qk0-a.oregon-postgres.render.com/remind"
+  connection: "postgresql://pgweb_owner:HQKUwuVPxq17@ep-dry-shape-a5f2ddxj-pooler.us-east-2.aws.neon.tech/remind?sslmode=require"
 school_id: sch-f921853e-e89a-4527-b421-bfff80d641d3
 redis:
   connection: "123213123131"
+notification:
+  url: "http://localhost:8080"

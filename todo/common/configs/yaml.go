@@ -28,6 +28,9 @@ type YAML struct {
 		Level string `yaml:"level" default:"debug"`
 		File  string `yaml:"file" default:""`
 	} `yaml:"log"`
+	Notification struct {
+		URL string `yaml:"url" validate:"required"`
+	} `yaml:"notification"`
 	// SchoolID string `yaml:"school_id" validate:"required"`
 }
 

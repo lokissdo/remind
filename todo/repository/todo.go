@@ -1,51 +1,56 @@
 package repository
 
-// CRUD to do
-
 import (
-	"context"
-	"fmt"
-	"time"
 	"todo/database"
 	"todo/model"
 )
 
-
-
-func CreateReminder(reminder model.Reminder) (model.Reminder, error) {
-	if err := database.Db.Create(&reminder).Error; err != nil {
-		return reminder, err
+// CreateTodo creates a new todo
+func CreateTodo(todo model.Todo) (model.Todo, error) {
+	if err := database.Db.Create(&todo).Error; err != nil {
+		return todo, err
 	}
-	return reminder, nil
-}
-
-func GetRemindersByTodoID(id string) (model.Reminder, error) {
-	var reminder model.Reminder
-	if err :=  database.Db.Where("todo_id = ?", id).Take(&reminder).Error; err != nil {
-		return reminder, err
-	}
-	return reminder, nil
+	return todo, nil
 }
 
 
-func UpdateReminderByID(id string, reminder model.Reminder) (model.Reminder, error) {
-	if err :=  database.Db.Where("id = ?", id).Updates(&reminder).Error; err != nil {
-		return reminder, err
+func ListAllTodosByUserID(userID string) ([]model.Todo, error) {
+
+	var todos []model.Todo
+	if err := database.Db.Where("user_id = ?", userID).Find(&todos).Error; err != nil {
+		return nil, err
 	}
-	return reminder, nil
+	return todos, nil
 }
 
+// GetTodoByID retrieves a todo by its ID along with its reminders
+func GetTodoByID(id string) (model.Todo, error) {
+	var todo model.Todo
+	if err := database.Db.Where("id = ?", id).Preload("Reminders").First(&todo).Error; err != nil {
+		return todo, err
+	}
+	return todo, nil
+}
 
-func GetNeedSentReminders(ctx context.Context) ([]model.Reminder, error) {
-	now := time.Now()
-
-	var reminders []model.Reminder
-	query :=  database.Db.Where("start <= ?", now).Find(&reminders)
-
-	// Handle potential cancellation during execution
-	if err := query.WithContext(ctx).Error; err != nil {
-		return nil, fmt.Errorf("error fetching reminders: %w", err)
+// UpdateTodoByID updates a todo by its ID
+func UpdateTodoByID(id string, updatedTodo model.Todo) (model.Todo, error) {
+	var todo model.Todo
+	if err := database.Db.Where("id = ?", id).First(&todo).Error; err != nil {
+		return todo, err
 	}
 
-	return reminders, nil
+	if err := database.Db.Model(&todo).Updates(&updatedTodo).Error; err != nil {
+		return todo, err
+	}
+
+	return updatedTodo, nil
+}
+
+// DeleteTodoByID deletes a todo by its ID
+func DeleteTodoByID(id string) error {
+	var todo model.Todo
+	if err := database.Db.Where("id = ?", id).Delete(&todo).Error; err != nil {
+		return err
+	}
+	return nil
 }

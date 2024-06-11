@@ -1,14 +1,14 @@
 package main
 
 import (
-	"todo/common/configs"
 	"todo/api/middleware"
+	"todo/common/configs"
 
 	// _ "todo/repository"
 	//"todo
-	api "todo/api"
 	"fmt"
 	"os"
+	api "todo/api"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -57,6 +57,7 @@ func setupLog() {
 
 func main() {
 	setupLog()
+	
 	r := setupRouter()
 	r.Run(fmt.Sprintf(":%d", configs.Yaml.Port))
 }
