@@ -1,0 +1,15 @@
+postgres: "postgres://remind_user:haFaMrzhWE0sFRMgHqdRrd6V4lBZniLY@dpg-cpduaf7sc6pc73970qk0-a.oregon-postgres.render.com/remind"
+migration_url: "file://db/migration"
+server_address:
+  http: "0.0.0.0:8080"
+  grpc: "0.0.0.0:9090"
+paseto:
+  token_symmetric_key: "12345678901234567890123456789012"
+  access_token_duration: "15m"
+  refresh_token_duration: "24h"
+environment: "dev"
+redis: "0.0.0.0:6379"
+email:
+  email_sender_name: "Remind"
+  email_sender_address: "nguyentienthanhgq@gmail.com"
+  email_sender_password: "odtwqggxwrlpbteg"
