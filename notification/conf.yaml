@@ -6,4 +6,4 @@ jwt:
 mongodb:
   connection: "mongodb+srv://dokhaihung:dokhaihung@cluster0.wzjck.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 firebase:
-  google_application_credentials: "notification/serviceAccountKey.json"
+  google_application_credentials: "./serviceAccountKey.json"
