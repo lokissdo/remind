@@ -11,7 +11,7 @@ import (
 
 	// "database/sql"
 	"todo/common/configs"
-	"todo/model"
+	// "todo/model"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -56,19 +56,10 @@ func initGorm() {
 	if err := sqlDB.Ping(); err != nil {
 		panic(err)
 	}
-	err = Db.Debug().AutoMigrate(&model.Todo{}, &model.Reminder{}, &model.FCMToken{})
-	if err != nil {
-		log.Fatal("Error migrating database:", err)
-		return
-	}
-
-	// err = Db.Debug().AutoMigrate()
+	// err = Db.Debug().AutoMigrate(&model.Todo{}, &model.Reminder{})
 	// if err != nil {
 	// 	log.Fatal("Error migrating database:", err)
 	// 	return
-	// }
-	// if err := models.InitializeResultStatuses(Db); err != nil {
-	// 	panic("Error initializing result statuses: " + err.Error())
 	// }
 
 	log.Println("Database initialization complete.")
