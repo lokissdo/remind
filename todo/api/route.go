@@ -1,8 +1,10 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
+	"todo/api/middleware"
 	"todo/service"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Register(r *gin.Engine) {
@@ -22,7 +24,6 @@ func Register(r *gin.Engine) {
 		todoRoutes.PUT("/:id", service.UpdateTodo)
 		todoRoutes.DELETE("/:id", service.DeleteTodo)
 	}
-
 	// Reminder routes
 	reminderRoutes := r.Group("/reminders")
 	{
