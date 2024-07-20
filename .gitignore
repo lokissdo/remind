@@ -1,0 +1,33 @@
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+/bin
+/pkg
+/vendor/
+
+# GoLand files
+.idea
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+*.py[cod]
+*$py.class
+
+# Python virtual environment
+venv/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode
+
+.DS_Store
+*/.DS_Store

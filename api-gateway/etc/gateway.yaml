@@ -1,0 +1,7 @@
+Name: remind-gateway
+Host: localhost
+Port: 9090
+Upstreams:
+  - Grpc:
+      Endpoints:
+        - localhost:10000

@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  deepsearch:
+    container_name: deepsearch
+    image: thanhnguyen/deepsearch:latest
+    env_file: 
+      - .env
+    ports:
+     - "${CLIP_PORT}:${CLIP_PORT}"
+    command: ["uvicorn", "src.app.main:app", "--port", "${CLIP_PORT}", "--host", "0.0.0.0"]

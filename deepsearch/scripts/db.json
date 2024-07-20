@@ -1,0 +1,12 @@
+{
+    "BeforeTest": [
+      {
+        "TYPE": "migrate_postgres",
+        "DBName": "deepsearch",
+        "TestUser": "",
+        "TestPassword": "",
+        "MigrateSQLDir": "$CODE_DIR/databases/postgresql"
+      }
+    ]
+}
+  

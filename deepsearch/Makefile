@@ -1,28 +1,16 @@
-# Variables
-PYTHON := python3
-PIP := $(PYTHON) -m pip
-PROJECT_NAME := deepsearch
+venv:
+	python3 -m venv venv && source venv/bin/activate
 
-# Targets
-.PHONY: install format lint clean test ci_lint ci_test coverage
+migrateup:
+	bash scripts/db.sh --up
 
-install:
-	poetry install
+migratedown:
+	bash scripts/db.sh --down
 
-install_all:
-	poetry install --all-extras
+server:
+	uvicorn src.app.main:app --port 7777 --host 0.0.0.0
 
-shell:
-	poetry shell
+build:
+	bash scripts/build.sh
 
-py_shell:
-	poetry run python
-
-lint:
-	poetry run ruff .
-
-test:
-	poetry run pytest $(file)
-
-coverage:
-	poetry run pytest --cov=$(PROJECT_NAME) --cov-report=html
+.PHONY: venv migrateup migratedown server build

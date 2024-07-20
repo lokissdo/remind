@@ -1,8 +1,9 @@
-postgres: "postgres://remind_user:haFaMrzhWE0sFRMgHqdRrd6V4lBZniLY@dpg-cpduaf7sc6pc73970qk0-a.oregon-postgres.render.com/remind"
+# postgres: "postgres://remind_user:haFaMrzhWE0sFRMgHqdRrd6V4lBZniLY@dpg-cpduaf7sc6pc73970qk0-a.oregon-postgres.render.com/remind"
+postgres: "postgresql://root:secret@localhost:5432/remind?sslmode=disable"
 migration_url: "file://db/migration"
 server_address:
   http: "0.0.0.0:8080"
-  grpc: "0.0.0.0:9090"
+  grpc: "0.0.0.0:10000"
 paseto:
   token_symmetric_key: "12345678901234567890123456789012"
   access_token_duration: "15m"

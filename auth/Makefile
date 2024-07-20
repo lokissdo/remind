@@ -1,8 +1,8 @@
 migrate_up:
-	migrate -path db/migration -database "postgres://remind_user:haFaMrzhWE0sFRMgHqdRrd6V4lBZniLY@dpg-cpduaf7sc6pc73970qk0-a.oregon-postgres.render.com/remind" -verbose up $(level)
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/remind?sslmode=disable" -verbose up $(level)
 
 migrate_down:
-	migrate -path db/migration -database "postgres://remind_user:haFaMrzhWE0sFRMgHqdRrd6V4lBZniLY@dpg-cpduaf7sc6pc73970qk0-a.oregon-postgres.render.com/remind" -verbose down $(level)
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/remind?sslmode=disable" -verbose down $(level)
 
 new_migration:
 	migrate create -ext sql -dir db/migration -seq $(name)
