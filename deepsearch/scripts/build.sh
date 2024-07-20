@@ -1,0 +1,1 @@
+DOCKER_BUILDKIT=1 docker build -t thanhnguyen/deepsearch:latest -f docker/Dockerfile .
