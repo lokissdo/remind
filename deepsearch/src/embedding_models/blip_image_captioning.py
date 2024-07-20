@@ -1,8 +1,8 @@
 from typing import Any
 import uuid
-from embedding_models.base import BaseEmbeddingModel
-from types.data_source import DataSource
-from types.media_type import MEDIA_TYPE
+from src.embedding_models.base import BaseEmbeddingModel
+from src.types.data_source import DataSource
+from src.types.media_type import MEDIA_TYPE
 
 
 class BlipImageCaptioning(BaseEmbeddingModel):

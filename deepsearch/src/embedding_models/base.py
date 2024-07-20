@@ -1,7 +1,7 @@
 from typing import Any
 
-from types.data_source import DataSource
-from types.media_type import MEDIA_TYPE
+from src.types.data_source import DataSource
+from src.types.media_type import MEDIA_TYPE
 
 
 class BaseEmbeddingModel:

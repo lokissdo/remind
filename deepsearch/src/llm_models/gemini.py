@@ -1,6 +1,6 @@
 from typing import Dict, List
-from llm_models.base import BaseLLM
-from llm_models.configs.gemini import GeminiConfig
+from src.llm_models.base import BaseLLM
+from src.llm_models.configs.gemini import GeminiConfig
 from src.types.dtypes import MediaData, QueryResult
 from src.types.media_type import MEDIA_TYPE
 
@@ -29,7 +29,7 @@ class Gemini(BaseLLM):
         return query_result
 
     def _get_llm_model(self):
-        return ChatGoogleGenerativeAI(model="gemini-pro")
+        return ChatGoogleGenerativeAI(model="gemini-pro", google_api_key="AIzaSyDIRWCtvPAH1XkUDIADSpkJUCnq0TIQ9U8")
 
     def _get_answer(self, context: str, query: str, config: GeminiConfig) -> str:
         llm_model = self._get_llm_model()
