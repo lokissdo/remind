@@ -21,16 +21,16 @@
     "application/json"
   ],
   "paths": {
-    "/v1/create_user": {
+    "/v1/create_token": {
       "post": {
-        "summary": "Create new user",
-        "description": "Use this API to create a new user",
-        "operationId": "AuthRemind_CreateUser",
+        "summary": "Create new token",
+        "description": "Use this API to create a new token",
+        "operationId": "AuthRemind_CreateToken",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbCreateUserResponse"
+              "$ref": "#/definitions/pbCreateTokenResponse"
             }
           },
           "default": {
@@ -46,7 +46,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbCreateUserRequest"
+              "$ref": "#/definitions/pbCreateTokenRequest"
             }
           }
         ],
@@ -55,16 +55,16 @@
         ]
       }
     },
-    "/v1/login_user": {
+    "/v1/verify_token": {
       "post": {
-        "summary": "Create new user",
-        "description": "Use this API to create a new user",
-        "operationId": "AuthRemind_LoginUser",
+        "summary": "Verify token",
+        "description": "Use this API to verify a token",
+        "operationId": "AuthRemind_VerifyToken",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbLoginUserResponse"
+              "$ref": "#/definitions/pbVerifyTokenResponse"
             }
           },
           "default": {
@@ -80,81 +80,8 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbLoginUserRequest"
+              "$ref": "#/definitions/pbVerifyTokenRequest"
             }
-          }
-        ],
-        "tags": [
-          "AuthRemind"
-        ]
-      }
-    },
-    "/v1/update_user": {
-      "patch": {
-        "summary": "Update user",
-        "description": "Use this API to create a new user",
-        "operationId": "AuthRemind_UpdateUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/pbUpdateUserResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/pbUpdateUserRequest"
-            }
-          }
-        ],
-        "tags": [
-          "AuthRemind"
-        ]
-      }
-    },
-    "/v1/verify_email": {
-      "get": {
-        "summary": "Verify email",
-        "description": "Use this API to verify user's email address",
-        "operationId": "AuthRemind_VerifyEmail",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/pbVerifyEmailResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "emailId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "secretCode",
-            "in": "query",
-            "required": false,
-            "type": "string"
           }
         ],
         "tags": [
@@ -164,119 +91,57 @@
     }
   },
   "definitions": {
-    "pbCreateUserRequest": {
+    "pbCreateTokenRequest": {
       "type": "object",
       "properties": {
         "username": {
           "type": "string"
-        },
-        "fullName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
         }
       }
     },
-    "pbCreateUserResponse": {
+    "pbCreateTokenResponse": {
       "type": "object",
       "properties": {
-        "user": {
-          "$ref": "#/definitions/pbUser"
+        "token": {
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/definitions/pbPayload"
         }
       }
     },
-    "pbLoginUserRequest": {
+    "pbPayload": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "username": {
           "type": "string"
         },
-        "password": {
-          "type": "string"
-        }
-      }
-    },
-    "pbLoginUserResponse": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "$ref": "#/definitions/pbUser"
-        },
-        "sessionId": {
-          "type": "string"
-        },
-        "accessToken": {
-          "type": "string"
-        },
-        "refreshToken": {
-          "type": "string"
-        },
-        "accessTokenExpiresAt": {
+        "issuedAt": {
           "type": "string",
           "format": "date-time"
         },
-        "refreshTokenExpiresAt": {
+        "expiredAt": {
           "type": "string",
           "format": "date-time"
         }
       }
     },
-    "pbUpdateUserRequest": {
+    "pbVerifyTokenRequest": {
       "type": "object",
       "properties": {
-        "username": {
-          "type": "string"
-        },
-        "fullName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
+        "token": {
           "type": "string"
         }
       }
     },
-    "pbUpdateUserResponse": {
+    "pbVerifyTokenResponse": {
       "type": "object",
       "properties": {
-        "user": {
-          "$ref": "#/definitions/pbUser"
-        }
-      }
-    },
-    "pbUser": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "fullName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "passwordChangedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "pbVerifyEmailResponse": {
-      "type": "object",
-      "properties": {
-        "isVerified": {
-          "type": "boolean"
+        "payload": {
+          "$ref": "#/definitions/pbPayload"
         }
       }
     },

@@ -1,17 +1,17 @@
 package gapi
 
 import (
-	db "github.com/elliotnguyen/auth/db/sqlc"
-	"github.com/elliotnguyen/auth/pb"
+	"remind/auth/pb"
+	"remind/auth/token"
+
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func convertUser(user db.User) *pb.User {
-	return &pb.User{
-		Username:          user.Username,
-		FullName:          user.FullName,
-		Email:             user.Email,
-		PasswordChangedAt: timestamppb.New(user.PasswordChangedAt),
-		CreatedAt:         timestamppb.New(user.CreatedAt),
+func convertPayload(payload *token.Payload) *pb.Payload {
+	return &pb.Payload{
+		Id: payload.ID.String(),
+		Username: payload.Username,
+		IssuedAt: timestamppb.New(payload.IssuedAt),
+		ExpiredAt: timestamppb.New(payload.ExpiredAt),
 	}
 }
