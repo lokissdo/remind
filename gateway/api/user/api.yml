@@ -1,0 +1,22 @@
+info:
+  title: User API
+  version: 1.0.0
+  description: Endpoint for user management
+  contact:
+    name: Nguyen Tien Thanh
+    email: nguyentienthanhgq@gmail
+endpoint: '0.0.0.0:5002'
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /v1/create_user:
+    security:      
+  /v1/login_user:
+    security:
+  /v1/update_user:
+    security:
+      bearer:
+  /v1/verify_email:
+    security:
