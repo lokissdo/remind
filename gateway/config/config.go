@@ -26,15 +26,15 @@ type (
 		AuthPort int    `env-required:"true" yaml:"auth_port" env:"GRPC_USER_PORT"`
 	}
 
-	Log struct {
-		Level string `env-required:"true" yaml:"log_level"   env:"LOG_LEVEL"`
+	Environment struct {
+		Name string `env-required:"true" yaml:"name"   env:"NAME"`
 	}
 
 	Config struct {
-		App  `yaml:"app"`
-		HTTP `yaml:"http"`
-		GRPC `yaml:"grpc"`
-		Log  `yaml:"logger"`
+		App         `yaml:"app"`
+		HTTP        `yaml:"http"`
+		GRPC        `yaml:"grpc"`
+		Environment `yaml:"environment"`
 	}
 )
 
@@ -45,9 +45,6 @@ func NewConfig() (*Config, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// debug
-	fmt.Println(dir)
 
 	err = cleanenv.ReadConfig(dir+"/config.yml", cfg)
 	if err != nil {

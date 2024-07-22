@@ -12,6 +12,8 @@ import (
 	"remind/auth/gapi"
 	"remind/auth/pb"
 	"remind/auth/util"
+
+	"remind/pkg/logger"
 )
 
 func main() {
@@ -33,7 +35,7 @@ func runGrpcServer(config util.Config) {
 		log.Fatal().Err(err).Msg("cannot create server")
 	}
 
-	grpcLogger := grpc.UnaryInterceptor(gapi.GrpcLogger)
+	grpcLogger := grpc.UnaryInterceptor(logger.GrpcLogger)
 	grpcServer := grpc.NewServer(grpcLogger)
 	pb.RegisterAuthRemindServer(grpcServer, server)
 	reflection.Register(grpcServer)

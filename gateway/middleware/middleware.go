@@ -9,41 +9,93 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/credentials/insecure"
 
 	pb "remind/auth/pb"
 )
 
-func AuthMiddleWare(next http.Handler, protectedPaths []string) http.Handler {
+
+// AllowCORS allows Cross Origin Resource Sharing from any origin.
+// Don't do this without consideration in production systems.
+func AllowCORS(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Info().Msg(r.URL.Path)
-		for _, path := range protectedPaths {
-			if strings.HasPrefix(r.URL.Path, path) {
-				token, err := extractToken(r.Header.Get("Authorization"))
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusUnauthorized)
-					return
-				}
-				// Validate the token
-				username, err := verifyToken(token)
-				if err != nil {
-					// If the token is invalid, return an unauthorized status
-					w.WriteHeader(http.StatusUnauthorized)
-					return
-				}
-				// Set the user ID in the request context
-				ctx := context.WithValue(r.Context(), "userID", username)
-				r = r.WithContext(ctx)
-				break
+		if origin := r.Header.Get("Origin"); origin != "" {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			if r.Method == "OPTIONS" && r.Header.Get("Access-Control-Request-Method") != "" {
+				preflightHandler(w, r)
+				return
 			}
 		}
-		// Call the next handler
+		h.ServeHTTP(w, r)
+	})
+}
+
+
+// preflightHandler adds the necessary headers in order to serve
+// CORS from any origin using the methods "GET", "HEAD", "POST", "PUT", "DELETE"
+// We insist, don't do this without consideration in production systems.
+func preflightHandler(w http.ResponseWriter, r *http.Request) {
+	headers := []string{"Content-Type", "Accept", "Authorization"}
+	w.Header().Set("Access-Control-Allow-Headers", strings.Join(headers, ","))
+	methods := []string{"GET", "HEAD", "POST", "PUT", "DELETE"}
+	w.Header().Set("Access-Control-Allow-Methods", strings.Join(methods, ","))
+	log.Info().Msgf("Preflight request for %s", r.URL.Path)
+}
+
+
+// healthzServer returns a simple health handler which returns ok.
+func HealthzServer(conn *grpc.ClientConn) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		if s := conn.GetState(); s != connectivity.Ready {
+			http.Error(w, fmt.Sprintf("grpc server is %s", s), http.StatusBadGateway)
+			return
+		}
+		fmt.Fprintln(w, "ok")
+	}
+}
+
+func AuthMiddleWare(next http.Handler, securityConfigs map[string]SecurityConfig) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		config, exists := securityConfigs[r.URL.Path]
+		if exists && config.AuthRequired {
+			var username string
+			for _, method := range config.AuthMethods {
+				switch method {
+					case "bearer":
+						token, err := extractToken(r.Header.Get("Authorization"))
+						if err != nil {
+							log.Error().Err(err).Msg("failed to extract token")
+							http.Error(w, "failed to extract token", http.StatusUnauthorized)
+							return
+						}
+						
+						username, err = verifyToken(token)
+						if err != nil {
+							log.Error().Err(err).Msg("failed to verify token")
+							http.Error(w, "failed to verify token", http.StatusUnauthorized)
+							return
+						}
+				}
+				if username != "" {
+					break
+				}
+			}
+			if username == "" {
+				http.Error(w, "unauthorized", http.StatusUnauthorized)
+				return
+			}
+			
+			ctx := context.WithValue(context.Background(), "username", username)
+			r = r.WithContext(ctx)
+		}
 		next.ServeHTTP(w, r)
 	})
 }
 
+
 func verifyToken(token string) (username string, err error) {
-	log.Info().Msg("verifying token")
 	conn, err := grpc.NewClient("localhost:5003", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Error().Err(err).Msg("failed to dial server")
@@ -61,8 +113,6 @@ func verifyToken(token string) (username string, err error) {
 		log.Error().Err(err).Msg("failed to verify token")
 		return "", err
 	}
-
-	log.Info().Msg(rsp.Payload.Username)
 
 	return rsp.GetPayload().GetUsername(), nil
 }
