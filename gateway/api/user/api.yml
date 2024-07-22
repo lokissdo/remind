@@ -12,7 +12,7 @@ produces:
 - application/json
 paths:
   /v1/create_user:
-    security:      
+    security:
   /v1/login_user:
     security:
   /v1/update_user:

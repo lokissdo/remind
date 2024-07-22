@@ -3,20 +3,21 @@ package main
 import (
 	"context"
 	"errors"
+	"os"
+
 	"fmt"
 	"net/http"
-	"os"
+
 	"remind/gateway/config"
-	"remind/pkg/logger"
 
-	"log/slog"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 
-	"remind/gateway/handlers"
 	"remind/gateway/middleware"
 
-	"github.com/golang/glog"
+	"remind/pkg/logger"
+
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
@@ -24,6 +25,7 @@ import (
 	usergen "remind/user/pb"
 )
 
+// gRPC Gateway
 func newGateway(
 	ctx context.Context,
 	cfg *config.Config,
@@ -55,48 +57,47 @@ func main() {
 
 	cfg, err := config.NewConfig()
 	if err != nil {
-		glog.Fatalf("Config error: %s", err)
+		log.Fatal().Err(err).Msg("failed to load config")
 	}
 
-	// set up logrus
-	logrus.SetFormatter(&logrus.JSONFormatter{})
-	logrus.SetOutput(os.Stdout)
-	logrus.SetLevel(logger.ConvertLogLevel(cfg.Log.Level))
-
-	// integrate Logrus with the slog logger
-	slog.New(logger.NewLogrusHandler(logrus.StandardLogger()))
+	if cfg.Environment.Name == "dev" {
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	}
 
 	mux := http.NewServeMux()
 
 	gw, err := newGateway(ctx, cfg, nil)
 	if err != nil {
-		slog.Error("failed to create a new gateway", err)
+		log.Fatal().Err(err).Msg("failed to create gateway")
 	}
 
 	mux.Handle("/", gw)
 
-	protectedPaths := []string{"/v1/update_user"}
+	securityConfigs, err := middleware.LoadAPISecurityConfig()
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to load security configs")
+	}
 
 	s := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
-		Handler: handlers.LogRequestBody(handlers.AllowCORS(middleware.AuthMiddleWare(mux, protectedPaths))),
+		Handler: logger.HttpLogger(middleware.AllowCORS(middleware.AuthMiddleWare(mux, securityConfigs))),
 	}
 
 	go func() {
 		<-ctx.Done()
-		slog.Info("shutting down the http server")
+		log.Info().Msg("shutting down the http server")
 
 		if err := s.Shutdown(context.Background()); err != nil {
-			slog.Error("failed to shutdown http server", err)
+			log.Fatal().Err(err).Msg("failed to shutdown http server")
 		}
 	}()
-
-	slog.Info("start listening...", "address", fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
+	
+	log.Info().Msgf("start listening... address: %s:%d", cfg.Host, cfg.Port)
 
 	err = s.ListenAndServe()
 	if errors.Is(err, http.ErrServerClosed) {
-		slog.Error("failed to listen and serve", err)
+		log.Fatal().Err(err).Msg("failed to listen and serve")
 	} else if err != nil {
-		slog.Error("unexpected error from ListenAndServe", err)
+		log.Fatal().Err(err).Msg("Unexpected error")
 	}
 }

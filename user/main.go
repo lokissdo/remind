@@ -10,7 +10,8 @@ import (
 	"remind/user/util"
 	"remind/user/worker"
 
-	// "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"remind/pkg/logger"
+
 	"github.com/hibiken/asynq"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
@@ -18,9 +19,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	// "google.golang.org/protobuf/encoding/protojson"
 	"net"
-	// "net/http"
 	"os"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -56,7 +55,6 @@ func main() {
 
 	taskDistributor := worker.NewRedisTaskDistributor(redisOpt)
 	go runTaskProcessor(config, redisOpt, store)
-	// go runGatewayServer(config, store, taskDistributor)
 	runGrpcServer(config, store, taskDistributor)
 }
 
@@ -89,7 +87,7 @@ func runGrpcServer(config util.Config, store db.Store, taskDistributor worker.Ta
 		log.Fatal().Err(err).Msg("cannot create server")
 	}
 
-	grpcLogger := grpc.UnaryInterceptor(gapi.GrpcLogger)
+	grpcLogger := grpc.UnaryInterceptor(logger.GrpcLogger)
 	grpcServer := grpc.NewServer(grpcLogger)
 	pb.RegisterUserRemindServer(grpcServer, server)
 	reflection.Register(grpcServer)
@@ -105,43 +103,3 @@ func runGrpcServer(config util.Config, store db.Store, taskDistributor worker.Ta
 		log.Fatal().Err(err).Msg("cannot start server")
 	}
 }
-
-// func runGatewayServer(config util.Config, store db.Store, taskDistributor worker.TaskDistributor) {
-// 	server, err := gapi.NewServer(config, store, taskDistributor)
-// 	if err != nil {
-// 		log.Fatal().Err(err).Msg("cannot create server")
-// 	}
-
-// 	jsonOptions := runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
-// 		MarshalOptions: protojson.MarshalOptions{
-// 			UseProtoNames: true,
-// 		},
-// 		UnmarshalOptions: protojson.UnmarshalOptions{
-// 			DiscardUnknown: true,
-// 		},
-// 	})
-
-// 	grpcMux := runtime.NewServeMux(jsonOptions)
-// 	ctx, cancel := context.WithCancel(context.Background())
-// 	defer cancel()
-
-// 	err = pb.RegisterAuthRemindHandlerServer(ctx, grpcMux, server)
-// 	if err != nil {
-// 		log.Fatal().Err(err).Msg("cannot register gateway server")
-// 	}
-
-// 	mux := http.NewServeMux()
-// 	mux.Handle("/", grpcMux)
-
-// 	listener, err := net.Listen("tcp", config.ServerAddr.HTTP)
-// 	if err != nil {
-// 		log.Fatal().Err(err).Msg("cannot create listener")
-// 	}
-
-// 	log.Info().Msgf("start HTTP gateway server at %s", listener.Addr().String())
-// 	handler := gapi.HttpLogger(mux)
-// 	err = http.Serve(listener, handler)
-// 	if err != nil {
-// 		log.Fatal().Err(err).Msg("cannot start HTTP gateway server")
-// 	}
-// }
