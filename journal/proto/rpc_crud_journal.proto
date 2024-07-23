@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package pb;
+
+import "journal.proto";
+import "dtypes.proto";
+
+option go_package = "remind/journal/pb";
+
+message CreateJournalRequest {
+    string username = 1;
+    string title = 2;
+    string content = 3;
+    bool status = 4;
+    repeated string images = 6;
+    repeated string audios = 7;
+}
+
+message CreateJournalResponse {
+    Journal journal = 1;
+    repeated Image images = 2;
+    repeated Audio audios = 3;
+}
+
+message DeleteJournalRequest {
+    int32 id = 1;
+    string username = 2;
+}
+
+message DeleteJournalResponse {
+    bool success = 1;
+}
+
+message UpdateJournalRequest {
+    int32 id = 1;
+    string username = 2;
+    optional string title = 3;
+    optional string content = 4;
+    optional bool status = 5;
+    optional bytes images = 6;
+    optional bytes audios = 7;
+}
+
+message UpdateJournalResponse {
+    Journal journal = 1;
+}

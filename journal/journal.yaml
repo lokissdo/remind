@@ -1,0 +1,4 @@
+postgres: postgresql://root:secret@localhost:5432/journal?sslmode=disable
+migration_url: file://db/migration
+server_address: "0.0.0.0:5004"
+environment: "dev"
