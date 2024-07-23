@@ -1,0 +1,16 @@
+info:
+  title: Journal API
+  version: 1.0.0
+  description: Endpoint for journal management
+  contact:
+    name: Nguyen Tien Thanh
+    email: nguyentienthanhgq@gmail
+endpoint: '0.0.0.0:5004'
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /v1/create_journal:
+    security:
+      bearer:

@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package pb;
+
+import "rpc_crud_journal.proto";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "remind/journal/pb";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Remind Journal Service API"
+        version: "1.0"
+        contact: {
+        name: "Remind Journal";
+        url: "https://github.com/lokissdo/journal-reminder";
+        email: "nguyentienthanhgq@gmail.com";
+        };
+    };
+};
+
+service JournalRemind {
+    rpc CreateJournal (CreateJournalRequest) returns (CreateJournalResponse) {
+        option (google.api.http) = {
+            post: "/v1/create_journal"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to create a new journal";
+            summary: "Create a journal";
+        };
+    }
+
+    rpc UpdateJournal (UpdateJournalRequest) returns (UpdateJournalResponse) {
+        option (google.api.http) = {
+            patch: "/v1/update_journal"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to update a journal";
+            summary: "Update a journal";
+        };
+    }
+
+    rpc DeleteJournal (DeleteJournalRequest) returns (DeleteJournalResponse) {
+        option (google.api.http) = {
+            delete: "/v1/delete_journal/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to delete a journal";
+            summary: "Delete a journal";
+        };
+    }
+}

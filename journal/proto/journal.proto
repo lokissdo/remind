@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "remind/journal/pb";
+
+message Journal {
+    int64 id = 1;
+    string username = 2;
+    string title = 3;
+    string content = 4;
+    bool status = 5;
+    google.protobuf.Timestamp createdAt = 6;
+    google.protobuf.Timestamp updatedAt = 7;
+}

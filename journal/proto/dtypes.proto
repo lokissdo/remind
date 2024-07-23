@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "remind/journal/pb";
+
+message Image {
+    int64 id = 1;
+    int64 journal_id = 2;
+    string content = 3;
+    google.protobuf.Timestamp created_at = 4;
+}
+
+message Audio {
+    int64 id = 1;
+    int64 journal_id = 2;
+    string content = 3;
+    google.protobuf.Timestamp created_at = 4;
+}

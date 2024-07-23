@@ -24,6 +24,8 @@ type (
 		UserPort int    `env-required:"true" yaml:"user_port" env:"GRPC_AUTH_PORT"`
 		AuthHost string `env-required:"true" yaml:"auth_host" env:"GRPC_USER_HOST"`
 		AuthPort int    `env-required:"true" yaml:"auth_port" env:"GRPC_USER_PORT"`
+		JournalHost string `env-required:"true" yaml:"journal_host" env:"GRPC_JOURNAL_HOST"`
+		JournalPort int    `env-required:"true" yaml:"journal_port" env:"GRPC_JOURNAL_PORT"`
 	}
 
 	Environment struct {

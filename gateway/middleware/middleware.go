@@ -11,10 +11,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/credentials/insecure"
+	// "google.golang.org/grpc/metadata"
 
 	pb "remind/auth/pb"
 )
-
 
 // AllowCORS allows Cross Origin Resource Sharing from any origin.
 // Don't do this without consideration in production systems.
@@ -87,8 +87,7 @@ func AuthMiddleWare(next http.Handler, securityConfigs map[string]SecurityConfig
 				return
 			}
 			
-			ctx := context.WithValue(context.Background(), "username", username)
-			r = r.WithContext(ctx)
+			r.Header.Set("Grpc-Metadata-username", username)
 		}
 		next.ServeHTTP(w, r)
 	})

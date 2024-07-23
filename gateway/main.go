@@ -23,6 +23,7 @@ import (
 
 	authgen "remind/auth/pb"
 	usergen "remind/user/pb"
+	journalgen "remind/journal/pb"
 )
 
 // gRPC Gateway
@@ -32,7 +33,10 @@ func newGateway(
 	opts []gwruntime.ServeMuxOption,
 ) (http.Handler, error) {
 	mux := gwruntime.NewServeMux(opts...)
-	dialOpts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	dialOpts := []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(1024 * 1024 * 1024)),
+	}
 
 	userEndpoint := fmt.Sprintf("%s:%d", cfg.UserHost, cfg.UserPort)
 	err := usergen.RegisterUserRemindHandlerFromEndpoint(ctx, mux, userEndpoint, dialOpts)
@@ -42,6 +46,12 @@ func newGateway(
 
 	authEndpoint := fmt.Sprintf("%s:%d", cfg.AuthHost, cfg.AuthPort)
 	err = authgen.RegisterAuthRemindHandlerFromEndpoint(ctx, mux, authEndpoint, dialOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	journalEndpoint := fmt.Sprintf("%s:%d", cfg.JournalHost, cfg.JournalPort)
+	err = journalgen.RegisterJournalRemindHandlerFromEndpoint(ctx, mux, journalEndpoint, dialOpts)
 	if err != nil {
 		return nil, err
 	}
