@@ -35,6 +35,26 @@ func (q *Queries) CreateAudio(ctx context.Context, arg CreateAudioParams) (Audio
 	return i, err
 }
 
+const deleteAudio = `-- name: DeleteAudio :exec
+DELETE FROM audio
+WHERE id = $1
+`
+
+func (q *Queries) DeleteAudio(ctx context.Context, id int64) error {
+	_, err := q.db.Exec(ctx, deleteAudio, id)
+	return err
+}
+
+const deleteAudioOfJournal = `-- name: DeleteAudioOfJournal :exec
+DELETE FROM audio
+WHERE journal_id = $1
+`
+
+func (q *Queries) DeleteAudioOfJournal(ctx context.Context, journalID int64) error {
+	_, err := q.db.Exec(ctx, deleteAudioOfJournal, journalID)
+	return err
+}
+
 const getAudioOfJournal = `-- name: GetAudioOfJournal :many
 SELECT id, journal_id, content, created_at, is_embedded 
 FROM audio

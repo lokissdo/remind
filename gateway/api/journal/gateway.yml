@@ -11,6 +11,30 @@ consumes:
 produces:
 - application/json
 paths:
-  /v1/create_journal:
+  /journal/v1/create_journal:
+    security:
+      bearer:
+  /journal/v1/update_journal:
+    security:
+      bearer:
+  /journal/v1/delete_journal:
+    security:
+      bearer:
+  /journal/v1/query_journal:
+    security:
+      bearer:
+  /journal/v1/query_journals:
+    security:
+      bearer:
+  /journal/v1/add_image:
+    security:
+      bearer:
+  /journal/v1/delete_image:
+    security:
+      bearer:
+  /journal/v1/add_audio:
+    security:
+      bearer:
+  /journal/v1/delete_audio:
     security:
       bearer:

@@ -12,10 +12,16 @@ type Querier interface {
 	CreateAudio(ctx context.Context, arg CreateAudioParams) (Audio, error)
 	CreateImage(ctx context.Context, arg CreateImageParams) (Image, error)
 	CreateJournal(ctx context.Context, arg CreateJournalParams) (Journal, error)
+	DeleteAudio(ctx context.Context, id int64) error
+	DeleteAudioOfJournal(ctx context.Context, journalID int64) error
+	DeleteImage(ctx context.Context, id int64) error
+	DeleteImageOfJournal(ctx context.Context, journalID int64) error
+	DeleteJournal(ctx context.Context, id int64) error
 	GetAudioOfJournal(ctx context.Context, journalID int64) ([]Audio, error)
 	GetImageOfJournal(ctx context.Context, journalID int64) ([]Image, error)
 	GetJournal(ctx context.Context, id int64) (Journal, error)
 	GetJournalFromUserInTime(ctx context.Context, arg GetJournalFromUserInTimeParams) ([]Journal, error)
+	QueryJournal(ctx context.Context, arg QueryJournalParams) ([]Journal, error)
 	UpdateAudioEmbeddingStatus(ctx context.Context, arg UpdateAudioEmbeddingStatusParams) (Audio, error)
 	UpdateImageEmbeddingStatus(ctx context.Context, arg UpdateImageEmbeddingStatusParams) (Image, error)
 	UpdateJournal(ctx context.Context, arg UpdateJournalParams) (Journal, error)

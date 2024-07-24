@@ -3,6 +3,7 @@ syntax = "proto3";
 package pb;
 
 import "rpc_crud_journal.proto";
+import "rpc_query_journal.proto";
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -24,7 +25,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 service JournalRemind {
     rpc CreateJournal (CreateJournalRequest) returns (CreateJournalResponse) {
         option (google.api.http) = {
-            post: "/v1/create_journal"
+            post: "/journal/v1/create_journal"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -35,7 +36,7 @@ service JournalRemind {
 
     rpc UpdateJournal (UpdateJournalRequest) returns (UpdateJournalResponse) {
         option (google.api.http) = {
-            patch: "/v1/update_journal"
+            patch: "/journal/v1/update_journal"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -46,11 +47,73 @@ service JournalRemind {
 
     rpc DeleteJournal (DeleteJournalRequest) returns (DeleteJournalResponse) {
         option (google.api.http) = {
-            delete: "/v1/delete_journal/{id}"
+            delete: "/journal/v1/delete_journal"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to delete a journal";
             summary: "Delete a journal";
+        };
+    }
+
+    rpc AddImage (AddImageRequest) returns (AddImageResponse) {
+        option (google.api.http) = {
+            post: "/journal/v1/add_image"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to add an image to a journal";
+            summary: "Add an image to a journal";
+        };
+    }
+
+    rpc DeleteImage (DeleteImageRequest) returns (DeleteImageResponse) {
+        option (google.api.http) = {
+            delete: "/journal/v1/delete_image"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to delete an image from a journal";
+            summary: "Delete an image from a journal";
+        };
+    }
+
+    rpc AddAudio (AddAudioRequest) returns (AddAudioResponse) {
+        option (google.api.http) = {
+            post: "/journal/v1/add_audio"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to add an audio to a journal";
+            summary: "Add an audio to a journal";
+        };
+    }
+
+    rpc DeleteAudio (DeleteAudioRequest) returns (DeleteAudioResponse) {
+        option (google.api.http) = {
+            delete: "/journal/v1/delete_audio"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to delete an audio from a journal";
+            summary: "Delete an audio from a journal";
+        };
+    }
+
+    rpc QueryJournal (QueryJournalRequest) returns (QueryJournalResponse) {
+        option (google.api.http) = {
+            get: "/journal/v1/query_journal"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to query a journal";
+            summary: "Query a journal";
+        };
+    }
+
+    rpc QueryJournals (QueryJournalsRequest) returns (QueryJournalsResponse) {
+        option (google.api.http) = {
+            get: "/journal/v1/query_journals"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to query journals";
+            summary: "Query journals";
         };
     }
 }

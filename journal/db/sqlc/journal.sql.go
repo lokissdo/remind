@@ -48,6 +48,16 @@ func (q *Queries) CreateJournal(ctx context.Context, arg CreateJournalParams) (J
 	return i, err
 }
 
+const deleteJournal = `-- name: DeleteJournal :exec
+DELETE FROM journal
+WHERE id = $1
+`
+
+func (q *Queries) DeleteJournal(ctx context.Context, id int64) error {
+	_, err := q.db.Exec(ctx, deleteJournal, id)
+	return err
+}
+
 const getJournal = `-- name: GetJournal :one
 SELECT id, username, title, content, status, created_at, updated_at, is_embedded FROM journal
 WHERE id = $1 LIMIT 1
@@ -82,6 +92,58 @@ type GetJournalFromUserInTimeParams struct {
 
 func (q *Queries) GetJournalFromUserInTime(ctx context.Context, arg GetJournalFromUserInTimeParams) ([]Journal, error) {
 	rows, err := q.db.Query(ctx, getJournalFromUserInTime, arg.Username, arg.UpdatedAt, arg.UpdatedAt_2)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Journal{}
+	for rows.Next() {
+		var i Journal
+		if err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.Title,
+			&i.Content,
+			&i.Status,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.IsEmbedded,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const queryJournal = `-- name: QueryJournal :many
+SELECT id, username, title, content, status, created_at, updated_at, is_embedded
+FROM journal
+WHERE username = $1
+AND (
+    to_tsvector('english', content) @@ to_tsquery('english', $2)
+    OR to_tsvector('english', title) @@ to_tsquery('english', $2)
+)
+LIMIT $3 OFFSET $4
+`
+
+type QueryJournalParams struct {
+	Username  string `json:"username"`
+	ToTsquery string `json:"to_tsquery"`
+	Limit     int32  `json:"limit"`
+	Offset    int32  `json:"offset"`
+}
+
+func (q *Queries) QueryJournal(ctx context.Context, arg QueryJournalParams) ([]Journal, error) {
+	rows, err := q.db.Query(ctx, queryJournal,
+		arg.Username,
+		arg.ToTsquery,
+		arg.Limit,
+		arg.Offset,
+	)
 	if err != nil {
 		return nil, err
 	}

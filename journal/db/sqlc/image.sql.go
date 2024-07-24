@@ -35,6 +35,26 @@ func (q *Queries) CreateImage(ctx context.Context, arg CreateImageParams) (Image
 	return i, err
 }
 
+const deleteImage = `-- name: DeleteImage :exec
+DELETE FROM image
+WHERE id = $1
+`
+
+func (q *Queries) DeleteImage(ctx context.Context, id int64) error {
+	_, err := q.db.Exec(ctx, deleteImage, id)
+	return err
+}
+
+const deleteImageOfJournal = `-- name: DeleteImageOfJournal :exec
+DELETE FROM image
+WHERE journal_id = $1
+`
+
+func (q *Queries) DeleteImageOfJournal(ctx context.Context, journalID int64) error {
+	_, err := q.db.Exec(ctx, deleteImageOfJournal, journalID)
+	return err
+}
+
 const getImageOfJournal = `-- name: GetImageOfJournal :many
 SELECT id, journal_id, content, created_at, is_embedded 
 FROM image
