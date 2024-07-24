@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package pb;
+
+import "journal.proto";
+import "dtypes.proto";
+
+option go_package = "remind/journal/pb";
+
+message QueryJournalRequest {
+    string username = 1;
+    int64 id = 2;
+}
+
+message QueryJournalResponse {
+    Journal journal = 1;
+    repeated Image images = 2;
+    repeated Audio audios = 3;
+}
+
+message QueryJournalsRequest {
+    string username = 1;
+    string search = 2;
+    int32 limit = 3;
+    int32 offset = 4;
+}
+
+message QueryJournalsResponse {
+    repeated Journal journals = 1;
+    repeated Image images = 2;
+    repeated Audio audios = 3;
+}
+
+
+

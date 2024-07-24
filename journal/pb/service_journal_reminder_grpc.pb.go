@@ -25,6 +25,12 @@ type JournalRemindClient interface {
 	CreateJournal(ctx context.Context, in *CreateJournalRequest, opts ...grpc.CallOption) (*CreateJournalResponse, error)
 	UpdateJournal(ctx context.Context, in *UpdateJournalRequest, opts ...grpc.CallOption) (*UpdateJournalResponse, error)
 	DeleteJournal(ctx context.Context, in *DeleteJournalRequest, opts ...grpc.CallOption) (*DeleteJournalResponse, error)
+	AddImage(ctx context.Context, in *AddImageRequest, opts ...grpc.CallOption) (*AddImageResponse, error)
+	DeleteImage(ctx context.Context, in *DeleteImageRequest, opts ...grpc.CallOption) (*DeleteImageResponse, error)
+	AddAudio(ctx context.Context, in *AddAudioRequest, opts ...grpc.CallOption) (*AddAudioResponse, error)
+	DeleteAudio(ctx context.Context, in *DeleteAudioRequest, opts ...grpc.CallOption) (*DeleteAudioResponse, error)
+	QueryJournal(ctx context.Context, in *QueryJournalRequest, opts ...grpc.CallOption) (*QueryJournalResponse, error)
+	QueryJournals(ctx context.Context, in *QueryJournalsRequest, opts ...grpc.CallOption) (*QueryJournalsResponse, error)
 }
 
 type journalRemindClient struct {
@@ -62,6 +68,60 @@ func (c *journalRemindClient) DeleteJournal(ctx context.Context, in *DeleteJourn
 	return out, nil
 }
 
+func (c *journalRemindClient) AddImage(ctx context.Context, in *AddImageRequest, opts ...grpc.CallOption) (*AddImageResponse, error) {
+	out := new(AddImageResponse)
+	err := c.cc.Invoke(ctx, "/pb.JournalRemind/AddImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *journalRemindClient) DeleteImage(ctx context.Context, in *DeleteImageRequest, opts ...grpc.CallOption) (*DeleteImageResponse, error) {
+	out := new(DeleteImageResponse)
+	err := c.cc.Invoke(ctx, "/pb.JournalRemind/DeleteImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *journalRemindClient) AddAudio(ctx context.Context, in *AddAudioRequest, opts ...grpc.CallOption) (*AddAudioResponse, error) {
+	out := new(AddAudioResponse)
+	err := c.cc.Invoke(ctx, "/pb.JournalRemind/AddAudio", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *journalRemindClient) DeleteAudio(ctx context.Context, in *DeleteAudioRequest, opts ...grpc.CallOption) (*DeleteAudioResponse, error) {
+	out := new(DeleteAudioResponse)
+	err := c.cc.Invoke(ctx, "/pb.JournalRemind/DeleteAudio", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *journalRemindClient) QueryJournal(ctx context.Context, in *QueryJournalRequest, opts ...grpc.CallOption) (*QueryJournalResponse, error) {
+	out := new(QueryJournalResponse)
+	err := c.cc.Invoke(ctx, "/pb.JournalRemind/QueryJournal", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *journalRemindClient) QueryJournals(ctx context.Context, in *QueryJournalsRequest, opts ...grpc.CallOption) (*QueryJournalsResponse, error) {
+	out := new(QueryJournalsResponse)
+	err := c.cc.Invoke(ctx, "/pb.JournalRemind/QueryJournals", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JournalRemindServer is the server API for JournalRemind service.
 // All implementations must embed UnimplementedJournalRemindServer
 // for forward compatibility
@@ -69,6 +129,12 @@ type JournalRemindServer interface {
 	CreateJournal(context.Context, *CreateJournalRequest) (*CreateJournalResponse, error)
 	UpdateJournal(context.Context, *UpdateJournalRequest) (*UpdateJournalResponse, error)
 	DeleteJournal(context.Context, *DeleteJournalRequest) (*DeleteJournalResponse, error)
+	AddImage(context.Context, *AddImageRequest) (*AddImageResponse, error)
+	DeleteImage(context.Context, *DeleteImageRequest) (*DeleteImageResponse, error)
+	AddAudio(context.Context, *AddAudioRequest) (*AddAudioResponse, error)
+	DeleteAudio(context.Context, *DeleteAudioRequest) (*DeleteAudioResponse, error)
+	QueryJournal(context.Context, *QueryJournalRequest) (*QueryJournalResponse, error)
+	QueryJournals(context.Context, *QueryJournalsRequest) (*QueryJournalsResponse, error)
 	mustEmbedUnimplementedJournalRemindServer()
 }
 
@@ -84,6 +150,24 @@ func (UnimplementedJournalRemindServer) UpdateJournal(context.Context, *UpdateJo
 }
 func (UnimplementedJournalRemindServer) DeleteJournal(context.Context, *DeleteJournalRequest) (*DeleteJournalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteJournal not implemented")
+}
+func (UnimplementedJournalRemindServer) AddImage(context.Context, *AddImageRequest) (*AddImageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddImage not implemented")
+}
+func (UnimplementedJournalRemindServer) DeleteImage(context.Context, *DeleteImageRequest) (*DeleteImageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteImage not implemented")
+}
+func (UnimplementedJournalRemindServer) AddAudio(context.Context, *AddAudioRequest) (*AddAudioResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddAudio not implemented")
+}
+func (UnimplementedJournalRemindServer) DeleteAudio(context.Context, *DeleteAudioRequest) (*DeleteAudioResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAudio not implemented")
+}
+func (UnimplementedJournalRemindServer) QueryJournal(context.Context, *QueryJournalRequest) (*QueryJournalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryJournal not implemented")
+}
+func (UnimplementedJournalRemindServer) QueryJournals(context.Context, *QueryJournalsRequest) (*QueryJournalsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryJournals not implemented")
 }
 func (UnimplementedJournalRemindServer) mustEmbedUnimplementedJournalRemindServer() {}
 
@@ -152,6 +236,114 @@ func _JournalRemind_DeleteJournal_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _JournalRemind_AddImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JournalRemindServer).AddImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.JournalRemind/AddImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JournalRemindServer).AddImage(ctx, req.(*AddImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JournalRemind_DeleteImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JournalRemindServer).DeleteImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.JournalRemind/DeleteImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JournalRemindServer).DeleteImage(ctx, req.(*DeleteImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JournalRemind_AddAudio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddAudioRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JournalRemindServer).AddAudio(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.JournalRemind/AddAudio",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JournalRemindServer).AddAudio(ctx, req.(*AddAudioRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JournalRemind_DeleteAudio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAudioRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JournalRemindServer).DeleteAudio(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.JournalRemind/DeleteAudio",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JournalRemindServer).DeleteAudio(ctx, req.(*DeleteAudioRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JournalRemind_QueryJournal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryJournalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JournalRemindServer).QueryJournal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.JournalRemind/QueryJournal",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JournalRemindServer).QueryJournal(ctx, req.(*QueryJournalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JournalRemind_QueryJournals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryJournalsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JournalRemindServer).QueryJournals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.JournalRemind/QueryJournals",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JournalRemindServer).QueryJournals(ctx, req.(*QueryJournalsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // JournalRemind_ServiceDesc is the grpc.ServiceDesc for JournalRemind service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +362,30 @@ var JournalRemind_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteJournal",
 			Handler:    _JournalRemind_DeleteJournal_Handler,
+		},
+		{
+			MethodName: "AddImage",
+			Handler:    _JournalRemind_AddImage_Handler,
+		},
+		{
+			MethodName: "DeleteImage",
+			Handler:    _JournalRemind_DeleteImage_Handler,
+		},
+		{
+			MethodName: "AddAudio",
+			Handler:    _JournalRemind_AddAudio_Handler,
+		},
+		{
+			MethodName: "DeleteAudio",
+			Handler:    _JournalRemind_DeleteAudio_Handler,
+		},
+		{
+			MethodName: "QueryJournal",
+			Handler:    _JournalRemind_QueryJournal_Handler,
+		},
+		{
+			MethodName: "QueryJournals",
+			Handler:    _JournalRemind_QueryJournals_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

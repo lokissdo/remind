@@ -1,9 +1,14 @@
 package db
 
-import "github.com/jackc/pgx/v5/pgxpool"
+import (
+	"context"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+)
 
 type Store interface {
 	Querier
+	DeleteJournalTx(ctx context.Context, journal_id int64) error
 }
 
 type SQLStore struct {

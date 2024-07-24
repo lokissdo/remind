@@ -29,8 +29,8 @@ type CreateJournalRequest struct {
 	Title    string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Content  string   `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	Status   bool     `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	Images   []string `protobuf:"bytes,6,rep,name=images,proto3" json:"images,omitempty"`
-	Audios   []string `protobuf:"bytes,7,rep,name=audios,proto3" json:"audios,omitempty"`
+	Images   [][]byte `protobuf:"bytes,6,rep,name=images,proto3" json:"images,omitempty"`
+	Audios   [][]byte `protobuf:"bytes,7,rep,name=audios,proto3" json:"audios,omitempty"`
 }
 
 func (x *CreateJournalRequest) Reset() {
@@ -93,14 +93,14 @@ func (x *CreateJournalRequest) GetStatus() bool {
 	return false
 }
 
-func (x *CreateJournalRequest) GetImages() []string {
+func (x *CreateJournalRequest) GetImages() [][]byte {
 	if x != nil {
 		return x.Images
 	}
 	return nil
 }
 
-func (x *CreateJournalRequest) GetAudios() []string {
+func (x *CreateJournalRequest) GetAudios() [][]byte {
 	if x != nil {
 		return x.Audios
 	}
@@ -175,7 +175,7 @@ type DeleteJournalRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id       int32  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id       int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 }
 
@@ -211,7 +211,7 @@ func (*DeleteJournalRequest) Descriptor() ([]byte, []int) {
 	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *DeleteJournalRequest) GetId() int32 {
+func (x *DeleteJournalRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
@@ -277,13 +277,11 @@ type UpdateJournalRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id       int32   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id       int64   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Username string  `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	Title    *string `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title,omitempty"`
 	Content  *string `protobuf:"bytes,4,opt,name=content,proto3,oneof" json:"content,omitempty"`
 	Status   *bool   `protobuf:"varint,5,opt,name=status,proto3,oneof" json:"status,omitempty"`
-	Images   []byte  `protobuf:"bytes,6,opt,name=images,proto3,oneof" json:"images,omitempty"`
-	Audios   []byte  `protobuf:"bytes,7,opt,name=audios,proto3,oneof" json:"audios,omitempty"`
 }
 
 func (x *UpdateJournalRequest) Reset() {
@@ -318,7 +316,7 @@ func (*UpdateJournalRequest) Descriptor() ([]byte, []int) {
 	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *UpdateJournalRequest) GetId() int32 {
+func (x *UpdateJournalRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
@@ -351,20 +349,6 @@ func (x *UpdateJournalRequest) GetStatus() bool {
 		return *x.Status
 	}
 	return false
-}
-
-func (x *UpdateJournalRequest) GetImages() []byte {
-	if x != nil {
-		return x.Images
-	}
-	return nil
-}
-
-func (x *UpdateJournalRequest) GetAudios() []byte {
-	if x != nil {
-		return x.Audios
-	}
-	return nil
 }
 
 type UpdateJournalResponse struct {
@@ -414,6 +398,446 @@ func (x *UpdateJournalResponse) GetJournal() *Journal {
 	return nil
 }
 
+type AddImageRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	JournalId int64  `protobuf:"varint,1,opt,name=journal_id,json=journalId,proto3" json:"journal_id,omitempty"`
+	Username  string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Content   []byte `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+}
+
+func (x *AddImageRequest) Reset() {
+	*x = AddImageRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rpc_crud_journal_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddImageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddImageRequest) ProtoMessage() {}
+
+func (x *AddImageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_crud_journal_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddImageRequest.ProtoReflect.Descriptor instead.
+func (*AddImageRequest) Descriptor() ([]byte, []int) {
+	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *AddImageRequest) GetJournalId() int64 {
+	if x != nil {
+		return x.JournalId
+	}
+	return 0
+}
+
+func (x *AddImageRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *AddImageRequest) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+type AddImageResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Image *Image `protobuf:"bytes,1,opt,name=image,proto3" json:"image,omitempty"`
+}
+
+func (x *AddImageResponse) Reset() {
+	*x = AddImageResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rpc_crud_journal_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddImageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddImageResponse) ProtoMessage() {}
+
+func (x *AddImageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_crud_journal_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddImageResponse.ProtoReflect.Descriptor instead.
+func (*AddImageResponse) Descriptor() ([]byte, []int) {
+	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *AddImageResponse) GetImage() *Image {
+	if x != nil {
+		return x.Image
+	}
+	return nil
+}
+
+type DeleteImageRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id        int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	JournalId int64  `protobuf:"varint,2,opt,name=journal_id,json=journalId,proto3" json:"journal_id,omitempty"`
+	Username  string `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
+}
+
+func (x *DeleteImageRequest) Reset() {
+	*x = DeleteImageRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rpc_crud_journal_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteImageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteImageRequest) ProtoMessage() {}
+
+func (x *DeleteImageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_crud_journal_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteImageRequest.ProtoReflect.Descriptor instead.
+func (*DeleteImageRequest) Descriptor() ([]byte, []int) {
+	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DeleteImageRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *DeleteImageRequest) GetJournalId() int64 {
+	if x != nil {
+		return x.JournalId
+	}
+	return 0
+}
+
+func (x *DeleteImageRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+type DeleteImageResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+}
+
+func (x *DeleteImageResponse) Reset() {
+	*x = DeleteImageResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rpc_crud_journal_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteImageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteImageResponse) ProtoMessage() {}
+
+func (x *DeleteImageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_crud_journal_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteImageResponse.ProtoReflect.Descriptor instead.
+func (*DeleteImageResponse) Descriptor() ([]byte, []int) {
+	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DeleteImageResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+type AddAudioRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	JournalId int64  `protobuf:"varint,1,opt,name=journal_id,json=journalId,proto3" json:"journal_id,omitempty"`
+	Username  string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Content   []byte `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+}
+
+func (x *AddAudioRequest) Reset() {
+	*x = AddAudioRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rpc_crud_journal_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddAudioRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddAudioRequest) ProtoMessage() {}
+
+func (x *AddAudioRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_crud_journal_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddAudioRequest.ProtoReflect.Descriptor instead.
+func (*AddAudioRequest) Descriptor() ([]byte, []int) {
+	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *AddAudioRequest) GetJournalId() int64 {
+	if x != nil {
+		return x.JournalId
+	}
+	return 0
+}
+
+func (x *AddAudioRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *AddAudioRequest) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+type AddAudioResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Audio *Audio `protobuf:"bytes,1,opt,name=audio,proto3" json:"audio,omitempty"`
+}
+
+func (x *AddAudioResponse) Reset() {
+	*x = AddAudioResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rpc_crud_journal_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddAudioResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddAudioResponse) ProtoMessage() {}
+
+func (x *AddAudioResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_crud_journal_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddAudioResponse.ProtoReflect.Descriptor instead.
+func (*AddAudioResponse) Descriptor() ([]byte, []int) {
+	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *AddAudioResponse) GetAudio() *Audio {
+	if x != nil {
+		return x.Audio
+	}
+	return nil
+}
+
+type DeleteAudioRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id        int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	JournalId int64  `protobuf:"varint,2,opt,name=journal_id,json=journalId,proto3" json:"journal_id,omitempty"`
+	Username  string `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
+}
+
+func (x *DeleteAudioRequest) Reset() {
+	*x = DeleteAudioRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rpc_crud_journal_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteAudioRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAudioRequest) ProtoMessage() {}
+
+func (x *DeleteAudioRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_crud_journal_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAudioRequest.ProtoReflect.Descriptor instead.
+func (*DeleteAudioRequest) Descriptor() ([]byte, []int) {
+	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *DeleteAudioRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *DeleteAudioRequest) GetJournalId() int64 {
+	if x != nil {
+		return x.JournalId
+	}
+	return 0
+}
+
+func (x *DeleteAudioRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+type DeleteAudioResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+}
+
+func (x *DeleteAudioResponse) Reset() {
+	*x = DeleteAudioResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rpc_crud_journal_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteAudioResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAudioResponse) ProtoMessage() {}
+
+func (x *DeleteAudioResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_crud_journal_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAudioResponse.ProtoReflect.Descriptor instead.
+func (*DeleteAudioResponse) Descriptor() ([]byte, []int) {
+	return file_rpc_crud_journal_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *DeleteAudioResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
 var File_rpc_crud_journal_proto protoreflect.FileDescriptor
 
 var file_rpc_crud_journal_proto_rawDesc = []byte{
@@ -429,8 +853,8 @@ var file_rpc_crud_journal_proto_rawDesc = []byte{
 	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12, 0x16,
 	0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06,
 	0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73,
-	0x18, 0x06, 0x20, 0x03, 0x28, 0x09, 0x52, 0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x12, 0x16,
-	0x0a, 0x06, 0x61, 0x75, 0x64, 0x69, 0x6f, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x09, 0x52, 0x06,
+	0x18, 0x06, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x12, 0x16,
+	0x0a, 0x06, 0x61, 0x75, 0x64, 0x69, 0x6f, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06,
 	0x61, 0x75, 0x64, 0x69, 0x6f, 0x73, 0x22, 0x84, 0x01, 0x0a, 0x15, 0x43, 0x72, 0x65, 0x61, 0x74,
 	0x65, 0x4a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
 	0x12, 0x25, 0x0a, 0x07, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28,
@@ -442,14 +866,14 @@ var file_rpc_crud_journal_proto_rawDesc = []byte{
 	0x41, 0x75, 0x64, 0x69, 0x6f, 0x52, 0x06, 0x61, 0x75, 0x64, 0x69, 0x6f, 0x73, 0x22, 0x42, 0x0a,
 	0x14, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x05, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d,
+	0x03, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d,
 	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d,
 	0x65, 0x22, 0x31, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4a, 0x6f, 0x75, 0x72, 0x6e,
 	0x61, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75,
 	0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63,
-	0x63, 0x65, 0x73, 0x73, 0x22, 0x8a, 0x02, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4a,
+	0x63, 0x65, 0x73, 0x73, 0x22, 0xba, 0x01, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4a,
 	0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
-	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1a, 0x0a,
+	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1a, 0x0a,
 	0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x19, 0x0a, 0x05, 0x74, 0x69, 0x74,
 	0x6c, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c,
@@ -457,19 +881,52 @@ var file_rpc_crud_journal_proto_rawDesc = []byte{
 	0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x01, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74,
 	0x88, 0x01, 0x01, 0x12, 0x1b, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x05, 0x20,
 	0x01, 0x28, 0x08, 0x48, 0x02, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x88, 0x01, 0x01,
-	0x12, 0x1b, 0x0a, 0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0c,
-	0x48, 0x03, 0x52, 0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x88, 0x01, 0x01, 0x12, 0x1b, 0x0a,
-	0x06, 0x61, 0x75, 0x64, 0x69, 0x6f, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28, 0x0c, 0x48, 0x04, 0x52,
-	0x06, 0x61, 0x75, 0x64, 0x69, 0x6f, 0x73, 0x88, 0x01, 0x01, 0x42, 0x08, 0x0a, 0x06, 0x5f, 0x74,
-	0x69, 0x74, 0x6c, 0x65, 0x42, 0x0a, 0x0a, 0x08, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74,
-	0x42, 0x09, 0x0a, 0x07, 0x5f, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x42, 0x09, 0x0a, 0x07, 0x5f,
-	0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x42, 0x09, 0x0a, 0x07, 0x5f, 0x61, 0x75, 0x64, 0x69, 0x6f,
+	0x42, 0x08, 0x0a, 0x06, 0x5f, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x42, 0x0a, 0x0a, 0x08, 0x5f, 0x63,
+	0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x42, 0x09, 0x0a, 0x07, 0x5f, 0x73, 0x74, 0x61, 0x74, 0x75,
 	0x73, 0x22, 0x3e, 0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4a, 0x6f, 0x75, 0x72, 0x6e,
 	0x61, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x25, 0x0a, 0x07, 0x6a, 0x6f,
 	0x75, 0x72, 0x6e, 0x61, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x70, 0x62,
 	0x2e, 0x4a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x52, 0x07, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61,
-	0x6c, 0x42, 0x13, 0x5a, 0x11, 0x72, 0x65, 0x6d, 0x69, 0x6e, 0x64, 0x2f, 0x6a, 0x6f, 0x75, 0x72,
-	0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6c, 0x22, 0x66, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x5f,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61,
+	0x6c, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12,
+	0x18, 0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c,
+	0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x22, 0x33, 0x0a, 0x10, 0x41, 0x64, 0x64,
+	0x49, 0x6d, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a,
+	0x05, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x70,
+	0x62, 0x2e, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x52, 0x05, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x22, 0x5f,
+	0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03,
+	0x52, 0x02, 0x69, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x5f,
+	0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61,
+	0x6c, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x22,
+	0x2f, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73,
+	0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73,
+	0x22, 0x66, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x41, 0x75, 0x64, 0x69, 0x6f, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x5f, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c,
+	0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18,
+	0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52,
+	0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x22, 0x33, 0x0a, 0x10, 0x41, 0x64, 0x64, 0x41,
+	0x75, 0x64, 0x69, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x05,
+	0x61, 0x75, 0x64, 0x69, 0x6f, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x70, 0x62,
+	0x2e, 0x41, 0x75, 0x64, 0x69, 0x6f, 0x52, 0x05, 0x61, 0x75, 0x64, 0x69, 0x6f, 0x22, 0x5f, 0x0a,
+	0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x75, 0x64, 0x69, 0x6f, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x02, 0x69, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x5f, 0x69,
+	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c,
+	0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x2f,
+	0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x75, 0x64, 0x69, 0x6f, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x42,
+	0x13, 0x5a, 0x11, 0x72, 0x65, 0x6d, 0x69, 0x6e, 0x64, 0x2f, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61,
+	0x6c, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -484,7 +941,7 @@ func file_rpc_crud_journal_proto_rawDescGZIP() []byte {
 	return file_rpc_crud_journal_proto_rawDescData
 }
 
-var file_rpc_crud_journal_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_rpc_crud_journal_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_rpc_crud_journal_proto_goTypes = []interface{}{
 	(*CreateJournalRequest)(nil),  // 0: pb.CreateJournalRequest
 	(*CreateJournalResponse)(nil), // 1: pb.CreateJournalResponse
@@ -492,20 +949,30 @@ var file_rpc_crud_journal_proto_goTypes = []interface{}{
 	(*DeleteJournalResponse)(nil), // 3: pb.DeleteJournalResponse
 	(*UpdateJournalRequest)(nil),  // 4: pb.UpdateJournalRequest
 	(*UpdateJournalResponse)(nil), // 5: pb.UpdateJournalResponse
-	(*Journal)(nil),               // 6: pb.Journal
-	(*Image)(nil),                 // 7: pb.Image
-	(*Audio)(nil),                 // 8: pb.Audio
+	(*AddImageRequest)(nil),       // 6: pb.AddImageRequest
+	(*AddImageResponse)(nil),      // 7: pb.AddImageResponse
+	(*DeleteImageRequest)(nil),    // 8: pb.DeleteImageRequest
+	(*DeleteImageResponse)(nil),   // 9: pb.DeleteImageResponse
+	(*AddAudioRequest)(nil),       // 10: pb.AddAudioRequest
+	(*AddAudioResponse)(nil),      // 11: pb.AddAudioResponse
+	(*DeleteAudioRequest)(nil),    // 12: pb.DeleteAudioRequest
+	(*DeleteAudioResponse)(nil),   // 13: pb.DeleteAudioResponse
+	(*Journal)(nil),               // 14: pb.Journal
+	(*Image)(nil),                 // 15: pb.Image
+	(*Audio)(nil),                 // 16: pb.Audio
 }
 var file_rpc_crud_journal_proto_depIdxs = []int32{
-	6, // 0: pb.CreateJournalResponse.journal:type_name -> pb.Journal
-	7, // 1: pb.CreateJournalResponse.images:type_name -> pb.Image
-	8, // 2: pb.CreateJournalResponse.audios:type_name -> pb.Audio
-	6, // 3: pb.UpdateJournalResponse.journal:type_name -> pb.Journal
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	14, // 0: pb.CreateJournalResponse.journal:type_name -> pb.Journal
+	15, // 1: pb.CreateJournalResponse.images:type_name -> pb.Image
+	16, // 2: pb.CreateJournalResponse.audios:type_name -> pb.Audio
+	14, // 3: pb.UpdateJournalResponse.journal:type_name -> pb.Journal
+	15, // 4: pb.AddImageResponse.image:type_name -> pb.Image
+	16, // 5: pb.AddAudioResponse.audio:type_name -> pb.Audio
+	6,  // [6:6] is the sub-list for method output_type
+	6,  // [6:6] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_rpc_crud_journal_proto_init() }
@@ -588,6 +1055,102 @@ func file_rpc_crud_journal_proto_init() {
 				return nil
 			}
 		}
+		file_rpc_crud_journal_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddImageRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rpc_crud_journal_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddImageResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rpc_crud_journal_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteImageRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rpc_crud_journal_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteImageResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rpc_crud_journal_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddAudioRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rpc_crud_journal_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddAudioResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rpc_crud_journal_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteAudioRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rpc_crud_journal_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteAudioResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_rpc_crud_journal_proto_msgTypes[4].OneofWrappers = []interface{}{}
 	type x struct{}
@@ -596,7 +1159,7 @@ func file_rpc_crud_journal_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_rpc_crud_journal_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
