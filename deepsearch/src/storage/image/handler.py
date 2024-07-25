@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 
 from sqlalchemy import select
+from src.schema.dtypes import QueryModel
 from src.storage.connection import get_session
 from src.storage.image.model import ImageModel
 from src.models.base import BaseModel
@@ -8,16 +9,21 @@ from src.models.base import BaseModel
 
 def get_image_database(
     model: BaseModel,
-    query: str,
+    query: QueryModel,
 ) -> list[ImageModel] | None:
     """Gets the image entries from database based on the query"""
-    query_embedding = model.embed(query).feature.data
+    query_embedding = model.embed(query.text).feature.data
+    
+    limit = query.limit
+    if limit is None:
+        limit = 10
 
     with get_session() as db:
         images = db.execute(
             select(ImageModel)
+            .where(ImageModel.username == query.username)
             .order_by(ImageModel.embedding.op("<=>")(query_embedding))
-            .limit(3)
+            .limit(limit)
         ).all()
 
         if not images:
@@ -32,13 +38,14 @@ def save_image_to_db(
     image_data: dict[str, any]
 ) -> None:
     """Saves image entry to database"""
-    embedding = model.embed(image_data.get(ImageModel.content.key, "")).feature.data
+    embedding = model.embed(image_data.get("content", "")).feature.data
     print(f"Length of embedding {len(embedding)}")
     with get_session() as db:
         try:
             new_image = ImageModel(
+                image_id = image_data.get(ImageModel.image_id.key),
                 journal_id=image_data.get(ImageModel.journal_id.key),
-                content=image_data.get(ImageModel.content.key, ""),
+                username=image_data.get(ImageModel.username.key, ""),
                 embedding=embedding,
                 created_at=datetime.now(timezone.utc),
                 updated_at=datetime.now(timezone.utc),

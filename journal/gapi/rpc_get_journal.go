@@ -2,9 +2,15 @@ package gapi
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+	"net/url"
 	db "remind/journal/db/sqlc"
 	pb "remind/journal/pb"
+
+	"github.com/rs/zerolog/log"
 )
 
 func (server *Server) QueryJournal(ctx context.Context, req *pb.QueryJournalRequest) (*pb.QueryJournalResponse, error) {
@@ -37,8 +43,8 @@ func (server *Server) QueryJournal(ctx context.Context, req *pb.QueryJournalRequ
 
 	return &pb.QueryJournalResponse{
 		Journal: convertJournal(journal),
-		Images: pbImageList,
-		Audios: pbAudioList,
+		Images:  pbImageList,
+		Audios:  pbAudioList,
 	}, nil
 }
 
@@ -53,10 +59,10 @@ func (server *Server) QueryJournals(ctx context.Context, req *pb.QueryJournalsRe
 	}
 
 	arg := db.QueryJournalParams{
-		Username: req.GetUsername(),
+		Username:  req.GetUsername(),
 		ToTsquery: req.GetSearch(),
-		Limit:   limit,
-		Offset:  req.GetOffset(),
+		Limit:     limit,
+		Offset:    req.GetOffset(),
 	}
 
 	journalList, err := server.store.QueryJournal(ctx, arg)
@@ -71,5 +77,57 @@ func (server *Server) QueryJournals(ctx context.Context, req *pb.QueryJournalsRe
 
 	return &pb.QueryJournalsResponse{
 		Journals: pbJournalList,
+	}, nil
+}
+
+type Response struct {
+	Images   []int64 `json:"images"`
+	Journals []int64 `json:"journals"`
+}
+
+func (server *Server) AdvancedQueryJournals(ctx context.Context, req *pb.QueryJournalsRequest) (*pb.AdvancedQueryJournalsResponse, error) {
+	// if err := server.authorization(ctx, req.GetUsername()); err != nil {
+	// 	return nil, fmt.Errorf("authorization failed: %v", err)
+	// }
+
+	limit := req.GetLimit()
+	if limit == 0 {
+		limit = 10
+	}
+
+	params := url.Values{}
+	params.Add("username", req.GetUsername())
+	params.Add("text", req.GetSearch())
+	params.Add("limit", fmt.Sprintf("%d", limit))
+
+	baseURL := "http://localhost:7777/api/v1/query"
+	apiURL := fmt.Sprintf("%s?%s", baseURL, params.Encode())
+
+	resp, err := http.Get(apiURL)
+	if err != nil {
+		return nil, fmt.Errorf("cannot get response: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read body: %v", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("cannot get response: %s", body)
+	}
+
+	var response Response
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, fmt.Errorf("cannot unmarshal response: %v", err)
+	}
+
+	log.Info().Msgf("response: %v", body)
+
+	return &pb.AdvancedQueryJournalsResponse{
+		ImageId:  response.Images,
+		JournalId: response.Journals,
 	}, nil
 }

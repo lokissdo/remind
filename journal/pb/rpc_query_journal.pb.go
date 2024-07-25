@@ -272,6 +272,61 @@ func (x *QueryJournalsResponse) GetAudios() []*Audio {
 	return nil
 }
 
+type AdvancedQueryJournalsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ImageId   []int64 `protobuf:"varint,1,rep,packed,name=image_id,json=imageId,proto3" json:"image_id,omitempty"`
+	JournalId []int64 `protobuf:"varint,2,rep,packed,name=journal_id,json=journalId,proto3" json:"journal_id,omitempty"`
+}
+
+func (x *AdvancedQueryJournalsResponse) Reset() {
+	*x = AdvancedQueryJournalsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rpc_query_journal_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AdvancedQueryJournalsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdvancedQueryJournalsResponse) ProtoMessage() {}
+
+func (x *AdvancedQueryJournalsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_query_journal_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdvancedQueryJournalsResponse.ProtoReflect.Descriptor instead.
+func (*AdvancedQueryJournalsResponse) Descriptor() ([]byte, []int) {
+	return file_rpc_query_journal_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *AdvancedQueryJournalsResponse) GetImageId() []int64 {
+	if x != nil {
+		return x.ImageId
+	}
+	return nil
+}
+
+func (x *AdvancedQueryJournalsResponse) GetJournalId() []int64 {
+	if x != nil {
+		return x.JournalId
+	}
+	return nil
+}
+
 var File_rpc_query_journal_proto protoreflect.FileDescriptor
 
 var file_rpc_query_journal_proto_rawDesc = []byte{
@@ -307,9 +362,14 @@ var file_rpc_query_journal_proto_rawDesc = []byte{
 	0x32, 0x09, 0x2e, 0x70, 0x62, 0x2e, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x52, 0x06, 0x69, 0x6d, 0x61,
 	0x67, 0x65, 0x73, 0x12, 0x21, 0x0a, 0x06, 0x61, 0x75, 0x64, 0x69, 0x6f, 0x73, 0x18, 0x03, 0x20,
 	0x03, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x75, 0x64, 0x69, 0x6f, 0x52, 0x06,
-	0x61, 0x75, 0x64, 0x69, 0x6f, 0x73, 0x42, 0x13, 0x5a, 0x11, 0x72, 0x65, 0x6d, 0x69, 0x6e, 0x64,
-	0x2f, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x61, 0x75, 0x64, 0x69, 0x6f, 0x73, 0x22, 0x59, 0x0a, 0x1d, 0x41, 0x64, 0x76, 0x61, 0x6e, 0x63,
+	0x65, 0x64, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x73, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x69, 0x6d, 0x61, 0x67, 0x65,
+	0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x03, 0x28, 0x03, 0x52, 0x07, 0x69, 0x6d, 0x61, 0x67, 0x65,
+	0x49, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x5f, 0x69, 0x64,
+	0x18, 0x02, 0x20, 0x03, 0x28, 0x03, 0x52, 0x09, 0x6a, 0x6f, 0x75, 0x72, 0x6e, 0x61, 0x6c, 0x49,
+	0x64, 0x42, 0x13, 0x5a, 0x11, 0x72, 0x65, 0x6d, 0x69, 0x6e, 0x64, 0x2f, 0x6a, 0x6f, 0x75, 0x72,
+	0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -324,23 +384,24 @@ func file_rpc_query_journal_proto_rawDescGZIP() []byte {
 	return file_rpc_query_journal_proto_rawDescData
 }
 
-var file_rpc_query_journal_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_rpc_query_journal_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_rpc_query_journal_proto_goTypes = []interface{}{
-	(*QueryJournalRequest)(nil),   // 0: pb.QueryJournalRequest
-	(*QueryJournalResponse)(nil),  // 1: pb.QueryJournalResponse
-	(*QueryJournalsRequest)(nil),  // 2: pb.QueryJournalsRequest
-	(*QueryJournalsResponse)(nil), // 3: pb.QueryJournalsResponse
-	(*Journal)(nil),               // 4: pb.Journal
-	(*Image)(nil),                 // 5: pb.Image
-	(*Audio)(nil),                 // 6: pb.Audio
+	(*QueryJournalRequest)(nil),           // 0: pb.QueryJournalRequest
+	(*QueryJournalResponse)(nil),          // 1: pb.QueryJournalResponse
+	(*QueryJournalsRequest)(nil),          // 2: pb.QueryJournalsRequest
+	(*QueryJournalsResponse)(nil),         // 3: pb.QueryJournalsResponse
+	(*AdvancedQueryJournalsResponse)(nil), // 4: pb.AdvancedQueryJournalsResponse
+	(*Journal)(nil),                       // 5: pb.Journal
+	(*Image)(nil),                         // 6: pb.Image
+	(*Audio)(nil),                         // 7: pb.Audio
 }
 var file_rpc_query_journal_proto_depIdxs = []int32{
-	4, // 0: pb.QueryJournalResponse.journal:type_name -> pb.Journal
-	5, // 1: pb.QueryJournalResponse.images:type_name -> pb.Image
-	6, // 2: pb.QueryJournalResponse.audios:type_name -> pb.Audio
-	4, // 3: pb.QueryJournalsResponse.journals:type_name -> pb.Journal
-	5, // 4: pb.QueryJournalsResponse.images:type_name -> pb.Image
-	6, // 5: pb.QueryJournalsResponse.audios:type_name -> pb.Audio
+	5, // 0: pb.QueryJournalResponse.journal:type_name -> pb.Journal
+	6, // 1: pb.QueryJournalResponse.images:type_name -> pb.Image
+	7, // 2: pb.QueryJournalResponse.audios:type_name -> pb.Audio
+	5, // 3: pb.QueryJournalsResponse.journals:type_name -> pb.Journal
+	6, // 4: pb.QueryJournalsResponse.images:type_name -> pb.Image
+	7, // 5: pb.QueryJournalsResponse.audios:type_name -> pb.Audio
 	6, // [6:6] is the sub-list for method output_type
 	6, // [6:6] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name
@@ -404,6 +465,18 @@ func file_rpc_query_journal_proto_init() {
 				return nil
 			}
 		}
+		file_rpc_query_journal_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AdvancedQueryJournalsResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -411,7 +484,7 @@ func file_rpc_query_journal_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_rpc_query_journal_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

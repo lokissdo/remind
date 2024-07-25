@@ -31,6 +31,7 @@ type JournalRemindClient interface {
 	DeleteAudio(ctx context.Context, in *DeleteAudioRequest, opts ...grpc.CallOption) (*DeleteAudioResponse, error)
 	QueryJournal(ctx context.Context, in *QueryJournalRequest, opts ...grpc.CallOption) (*QueryJournalResponse, error)
 	QueryJournals(ctx context.Context, in *QueryJournalsRequest, opts ...grpc.CallOption) (*QueryJournalsResponse, error)
+	AdvancedQueryJournals(ctx context.Context, in *QueryJournalsRequest, opts ...grpc.CallOption) (*AdvancedQueryJournalsResponse, error)
 }
 
 type journalRemindClient struct {
@@ -122,6 +123,15 @@ func (c *journalRemindClient) QueryJournals(ctx context.Context, in *QueryJourna
 	return out, nil
 }
 
+func (c *journalRemindClient) AdvancedQueryJournals(ctx context.Context, in *QueryJournalsRequest, opts ...grpc.CallOption) (*AdvancedQueryJournalsResponse, error) {
+	out := new(AdvancedQueryJournalsResponse)
+	err := c.cc.Invoke(ctx, "/pb.JournalRemind/AdvancedQueryJournals", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JournalRemindServer is the server API for JournalRemind service.
 // All implementations must embed UnimplementedJournalRemindServer
 // for forward compatibility
@@ -135,6 +145,7 @@ type JournalRemindServer interface {
 	DeleteAudio(context.Context, *DeleteAudioRequest) (*DeleteAudioResponse, error)
 	QueryJournal(context.Context, *QueryJournalRequest) (*QueryJournalResponse, error)
 	QueryJournals(context.Context, *QueryJournalsRequest) (*QueryJournalsResponse, error)
+	AdvancedQueryJournals(context.Context, *QueryJournalsRequest) (*AdvancedQueryJournalsResponse, error)
 	mustEmbedUnimplementedJournalRemindServer()
 }
 
@@ -168,6 +179,9 @@ func (UnimplementedJournalRemindServer) QueryJournal(context.Context, *QueryJour
 }
 func (UnimplementedJournalRemindServer) QueryJournals(context.Context, *QueryJournalsRequest) (*QueryJournalsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryJournals not implemented")
+}
+func (UnimplementedJournalRemindServer) AdvancedQueryJournals(context.Context, *QueryJournalsRequest) (*AdvancedQueryJournalsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AdvancedQueryJournals not implemented")
 }
 func (UnimplementedJournalRemindServer) mustEmbedUnimplementedJournalRemindServer() {}
 
@@ -344,6 +358,24 @@ func _JournalRemind_QueryJournals_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _JournalRemind_AdvancedQueryJournals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryJournalsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JournalRemindServer).AdvancedQueryJournals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.JournalRemind/AdvancedQueryJournals",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JournalRemindServer).AdvancedQueryJournals(ctx, req.(*QueryJournalsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // JournalRemind_ServiceDesc is the grpc.ServiceDesc for JournalRemind service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -386,6 +418,10 @@ var JournalRemind_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "QueryJournals",
 			Handler:    _JournalRemind_QueryJournals_Handler,
+		},
+		{
+			MethodName: "AdvancedQueryJournals",
+			Handler:    _JournalRemind_AdvancedQueryJournals_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

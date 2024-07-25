@@ -11,7 +11,7 @@ class Document(Base):
     __tablename__ = "document"
     id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
     journal_id = Column(Integer, nullable=False)
-    content = Column(String, nullable=False, default="")
+    username = Column(String, nullable=False)
     embedding = Column(Vector(768), nullable=False)
     created_at = Column(DateTime(timezone=False), server_default=func.now())
     updated_at = Column(

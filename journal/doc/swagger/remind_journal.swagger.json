@@ -89,6 +89,58 @@
         ]
       }
     },
+    "/journal/v1/advanced_query_journals": {
+      "get": {
+        "summary": "Advanced query journals",
+        "description": "Use this API to advanced query journals",
+        "operationId": "JournalRemind_AdvancedQueryJournals",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbAdvancedQueryJournalsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "JournalRemind"
+        ]
+      }
+    },
     "/journal/v1/create_journal": {
       "post": {
         "summary": "Create a journal",
@@ -426,6 +478,25 @@
       "properties": {
         "image": {
           "$ref": "#/definitions/pbImage"
+        }
+      }
+    },
+    "pbAdvancedQueryJournalsResponse": {
+      "type": "object",
+      "properties": {
+        "imageId": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        },
+        "journalId": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
         }
       }
     },

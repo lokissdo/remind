@@ -31,5 +31,10 @@ message QueryJournalsResponse {
     repeated Audio audios = 3;
 }
 
+message AdvancedQueryJournalsResponse {
+    repeated int64 image_id = 1;
+    repeated int64 journal_id = 2;
+}
+
 
 

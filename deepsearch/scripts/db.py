@@ -12,6 +12,7 @@ from typing import Any, Dict, List
 sql_dir = "databases/sql"
 code_dir = "."
 postgres_host = os.environ.get("POSTGRES_HOST", "localhost")
+postgres_port = os.environ.get("POSTGRES_PORT", "5433")
 all_dbs = {}
 
 
@@ -76,12 +77,12 @@ def validate_sql_command(cmd: str) -> bool:
 
 def run_postgres(name: str, cmd: str, *, isfile: bool = False) -> None:
     if isfile:
-        command = ["psql", "-U", "", "-h", postgres_host, "-w", "-d", name, "-f", cmd]
+        command = ["psql", "-U", "postgres", "-h", postgres_host, "-p", postgres_port, "-w", "-d", name, "-f", cmd]
     else:
         if not validate_sql_command(cmd):
             err_msg = f"Invalid or potentially dangerous SQL command detected: {cmd}"
             raise ValueError(err_msg)
-        command = ["psql", "-U", "", "-h", postgres_host, "-w", "-d", name, "-c", cmd]
+        command = ["psql", "-U", "postgres", "-h", postgres_host, "-p", postgres_port, "-w", "-d", name, "-c", cmd]
 
     subprocess.check_call(command)
 

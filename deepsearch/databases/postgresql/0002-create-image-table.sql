@@ -1,8 +1,9 @@
 -- +migrate Up
 CREATE TABLE IF NOT EXISTS image (
     id BIGSERIAL PRIMARY KEY,
-    journal_id INTEGER NOT NULL,
-    content BYTEA NOT NULL,
+    image_id BIGSERIAL NOT NULL,
+    journal_id BIGSERIAL NOT NULL,
+    username VARCHAR(255) NOT NULL,
     embedding vector(768) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now()

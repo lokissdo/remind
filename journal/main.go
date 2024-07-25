@@ -3,16 +3,23 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net"
 	"os"
 	db "remind/journal/db/sqlc"
 	"remind/journal/gapi"
+
+	// "remind/journal/gapi"
 	"remind/journal/pb"
 	"remind/journal/util"
 
 	"remind/pkg/logger"
+	"remind/pkg/rabbitmq"
+	"remind/pkg/rabbitmq/consumer"
+	"remind/pkg/rabbitmq/publisher"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
@@ -40,9 +47,14 @@ func main() {
 
 	runDBMigration(config.MigrationURL, config.DBSource)
 
+	amqp, journalPublisher, journalConsumer, err := configMessageQueue(config.RabbitMQURL)
+	if err != nil {
+		log.Fatal().Err(err).Msg("cannot configure message queue")
+	}
+
 	store := db.NewStore(connPool)
 
-	runGrpcServer(config, store)
+	runGrpcServer(config, store, amqp, journalPublisher, journalConsumer)
 }
 
 func runDBMigration(migrationURL string, dbSource string) {
@@ -58,8 +70,40 @@ func runDBMigration(migrationURL string, dbSource string) {
 	log.Info().Msg("db migrated successfully")
 }
 
-func runGrpcServer(config util.Config, store db.Store) {
-	server, err := gapi.NewServer(config, store)
+func configMessageQueue(rabbitmqURL string) (*amqp091.Connection, publisher.EventPublisher, consumer.EventConsumer, error) {
+	amqp, err := rabbitmq.NewRabbitMQConn(rabbitmq.RabbitMQConnStr(rabbitmqURL))
+	if err != nil {
+		return nil, nil, nil, fmt.Errorf("failed to create RabbitMQ connection")
+	}
+
+	journalPublisher, err := publisher.NewPublisher(amqp)
+	if err != nil {
+		return nil, nil, nil, fmt.Errorf("failed to create RabbitMQ publisher")
+	}
+	journalPublisher.Configure(
+		publisher.ExchangeName("journal-created-exchange"),
+		publisher.BindingKey("journal-created-routing-key"),
+		publisher.MessageTypeName("journal-created"),
+	)
+
+	journalConsumer, err := consumer.NewConsumer(amqp)
+	if err != nil {
+		return nil, nil, nil, fmt.Errorf("failed to create RabbitMQ consumer")
+	}
+	journalConsumer.Configure(
+		consumer.ExchangeName("journal-embedded-exchange"),
+		consumer.BindingKey("journal-embedded-routing-key"),
+		consumer.QueueName("journal-embedded"),
+		consumer.ConsumerTag("journal-embedded-consumer"),
+	)
+
+	return amqp, journalPublisher, journalConsumer, nil
+}
+
+func runGrpcServer(config util.Config, store db.Store, amqp *amqp091.Connection, publisher publisher.EventPublisher, consumer consumer.EventConsumer) {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	server, err := gapi.NewServer(config, store, amqp, publisher, consumer)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot create server")
 	}
@@ -73,6 +117,15 @@ func runGrpcServer(config util.Config, store db.Store) {
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot create listener")
 	}
+
+	go func() {
+		err1 := server.Consumer.StartConsumer(server.Worker)
+		if err1 != nil {
+			log.Fatal().Err(err1).Msg("cannot start consumer")
+			cancel()
+			<-ctx.Done()
+		}
+	}()
 
 	log.Info().Msgf("start gRPC server at %s", listener.Addr().String())
 	err = grpcServer.Serve(listener)
