@@ -1,6 +1,18 @@
 venv:
 	python3 -m venv venv && source venv/bin/activate
 
+install-pgvector:
+	docker pull pgvector/pgvector:pg16
+
+db:
+	docker run --name pgvector-database -e POSTGRES_HOST_AUTH_METHOD=trust -p 5433:5432 -d pgvector/pgvector:pg16
+
+install:
+	pip3 install -r requirements.txt
+
+createdb:
+	bash scripts/db.sh --create
+
 migrateup:
 	bash scripts/db.sh --up
 
@@ -13,4 +25,4 @@ server:
 build:
 	bash scripts/build.sh
 
-.PHONY: venv migrateup migratedown server build
+.PHONY: venv createdb migrateup migratedown server build install install-pgvector db

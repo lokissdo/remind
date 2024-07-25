@@ -116,4 +116,14 @@ service JournalRemind {
             summary: "Query journals";
         };
     }
+
+    rpc AdvancedQueryJournals (QueryJournalsRequest) returns (AdvancedQueryJournalsResponse) {
+        option (google.api.http) = {
+            get: "/journal/v1/advanced_query_journals"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to advanced query journals";
+            summary: "Advanced query journals";
+        };
+    }
 }

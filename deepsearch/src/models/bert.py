@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 from sentence_transformers import SentenceTransformer
 from src.schema.dtypes import FeatureModel
@@ -16,6 +17,7 @@ class BertModel(BaseModel):
     
     def unload_model(self):
         del self.model
+        logging.info(f"CLIP {self.model_name} successfully unloaded")
     
     def embed(self, data: Any) -> FeatureModel:
         if isinstance(data, str):

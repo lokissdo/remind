@@ -61,3 +61,9 @@ class ImageDto(BaseModel):
     content: bytes
 
 
+class QueryModel(BaseModel):
+    username: str
+    text: str
+    limit: int
+    
+

@@ -32,6 +32,15 @@ class AppConfig(BaseSettings):
     postgres_pool_size: int = 0
     postgres_pool_timeout: int = 0
     postgres_pool_recycle: int = 0
+    
+    # RabbitMQ
+    rabbitmq_host: str = ""
+    exchange_name: str = ""
+    routing_key: str = ""
+    
+    # Redis
+    redis_host: str = ""
+    cache_expire: int = 0
 
 
 @lru_cache
@@ -65,10 +74,6 @@ def get_config(
         encoding="utf-8",
     )
 
-    # at this stage we haven't get the env var setup, so we cant use the global logger
-    # logger = Logger("config", logging.INFO)
-    # logger.info("Reading config from paths: %s", config_paths)
-
     output_dict = {}
 
     sections = parser.sections()
@@ -80,21 +85,3 @@ def get_config(
 
 # initialize the app config
 app_config = get_config()
-# app_config.set_environment_variables()
-
-# log_level = (
-#     getattr(logging, app_config.log_level)
-#     if hasattr(logging, app_config.log_level)
-#     else logging.INFO
-# )
-# logger = Logger("app", log_level)
-
-
-# def main() -> None:
-#     """Print config value of specified key."""
-#     # typer.echo(app_config.dict().get(key))
-#     print(app_config.model_dump())
-
-
-# if __name__ == "__main__":
-#     main()

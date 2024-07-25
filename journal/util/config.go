@@ -10,6 +10,7 @@ type Config struct {
 	ServerAddr   string 	   `mapstructure:"server_address"`
 	Environment  string        `mapstructure:"environment"`
 	MigrationURL string        `mapstructure:"migration_url"`
+	RabbitMQURL  string        `mapstructure:"rabbitmq_url"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

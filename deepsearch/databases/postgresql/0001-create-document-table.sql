@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS document (
     id BIGSERIAL PRIMARY KEY,
     journal_id INTEGER NOT NULL,
-    content TEXT NOT NULL, 
+    username VARCHAR(255) NOT NULL,
     embedding vector(768) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now()
