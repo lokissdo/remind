@@ -10,6 +10,8 @@ from src.models.base import BaseModel
 from src.storage.document.handler import save_document_to_db
 from src.storage.image.handler import save_image_to_db
 
+from src.executions.event_handler.publisher.publisher import Publisher
+
 
 def create_callback(clip_model: BaseModel, bert_model: BaseModel):
     def process_body(body_dict, model_fields, model_class, db_model, save_func):
@@ -18,7 +20,20 @@ def create_callback(clip_model: BaseModel, bert_model: BaseModel):
             filtered_dict['content'] = base64.b64decode(filtered_dict['content'])
         try:
             instance = model_class(**filtered_dict)
-            save_func(db_model, instance.model_dump())
+            result = save_func(db_model, instance.model_dump())
+            if result is not None:
+                print(result)
+                publisher = Publisher(filtered_dict.get("type"))
+                print(result)
+                publisher.connect()
+                print(result)
+                response = {
+                    "type": filtered_dict.get("type"),
+                    "id": result
+                }
+                print(json.dumps(response))
+                publisher.publish(json.dumps(response), "application/json")
+                publisher.close()
         except Exception as e:
             logging.error(f"Failed to validate the body: {e}")
 
@@ -43,7 +58,7 @@ def consumer(clip_model: BaseModel, bert_model: BaseModel):
     channel = connection.channel()
     
     # Declare the exchange
-    exchange_name = app_config.exchange_name
+    exchange_name = app_config.consumer_exchange_name
     channel.exchange_declare(
         exchange=exchange_name, 
         exchange_type='direct',
@@ -64,7 +79,7 @@ def consumer(clip_model: BaseModel, bert_model: BaseModel):
     queue_name = result.method.queue
     
     # Bind the queue to the exchange
-    routing_key = app_config.routing_key
+    routing_key = app_config.consumer_routing_key
     channel.queue_bind(
         exchange=exchange_name,
         queue=queue_name,

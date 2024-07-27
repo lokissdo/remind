@@ -6,6 +6,7 @@ from fastapi import FastAPI, File, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.executions.caching.redis import RedisManager
+from src.executions.event_handler.publisher.publisher import Publisher
 from src.storage.image.handler import get_image_database, save_image_to_db
 from src.storage.document.handler import get_document_database, save_document_to_db
 from src.models.bert import BertModel

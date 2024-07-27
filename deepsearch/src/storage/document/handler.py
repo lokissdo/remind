@@ -47,7 +47,7 @@ def set_all_documents_to_is_moved() -> None:
 def save_document_to_db(
     model: BaseModel,
     document_data: dict[str, any]
-) -> None:
+) -> int:
     """Saves document entry to database"""
     embedding = model.embed(document_data.get("content", "")).feature.data
     logging.info(f"Length of embedding {len(embedding)}")
@@ -62,7 +62,8 @@ def save_document_to_db(
             )
             db.add(new_document)
             db.commit()
-
+            
+            return document_data.get(Document.journal_id.key)
         except Exception:
             db.rollback()
-            raise
+            return None

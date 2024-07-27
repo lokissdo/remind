@@ -35,8 +35,10 @@ class AppConfig(BaseSettings):
     
     # RabbitMQ
     rabbitmq_host: str = ""
-    exchange_name: str = ""
-    routing_key: str = ""
+    consumer_exchange_name: str = ""
+    consumer_routing_key: str = ""
+    publisher_exchange_name: str = ""
+    publisher_routing_key: str = ""
     
     # Redis
     redis_host: str = ""

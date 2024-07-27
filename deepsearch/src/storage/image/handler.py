@@ -36,7 +36,7 @@ def get_image_database(
 def save_image_to_db(
     model: BaseModel,
     image_data: dict[str, any]
-) -> None:
+) -> int:
     """Saves image entry to database"""
     embedding = model.embed(image_data.get("content", "")).feature.data
     print(f"Length of embedding {len(embedding)}")
@@ -52,6 +52,7 @@ def save_image_to_db(
             )
             db.add(new_image)
             db.commit()
-
+            return image_data.get(ImageModel.image_id.key)
         except Exception:
             db.rollback()
+            return None
