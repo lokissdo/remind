@@ -14,7 +14,7 @@ type ImageCreated struct {
 }
 
 func (d *ImageCreated) Identity() string {
-	return "ImageEmbedded"
+	return "ImageCreated"
 }
 
 type JournalCreated struct {
@@ -27,4 +27,24 @@ type JournalCreated struct {
 
 func (d *JournalCreated) Identity() string {
 	return "JournalCreated"
+}
+
+type JournalEmbedded struct {
+	shared.DomainEvent
+	Type     string `json:"type"`
+	ID       int64  `json:"id"`
+}
+
+func (d *JournalEmbedded) Identity() string {
+	return "JournalEmbedded"
+}
+
+type ImageEmbedded struct {
+	shared.DomainEvent
+	Type      string `json:"type"`
+	ID        int64  `json:"id"`
+}
+
+func (d *ImageEmbedded) Identity() string {
+	return "ImageEmbedded"
 }

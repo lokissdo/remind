@@ -2,16 +2,17 @@ package gapi
 
 import (
 	"context"
-	// "encoding/json"
+	"encoding/json"
+
 	"fmt"
 	"log/slog"
 	"remind/journal/db/sqlc"
+	"remind/journal/event"
 	"remind/journal/pb"
 	"remind/journal/util"
 
-	// event "remind/journal/event"
-	pkgPublisher "remind/pkg/rabbitmq/publisher"
 	pkgConsumer "remind/pkg/rabbitmq/consumer"
+	pkgPublisher "remind/pkg/rabbitmq/publisher"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 	"google.golang.org/grpc/metadata"
@@ -63,63 +64,64 @@ func (s *Server) Worker(ctx context.Context, messages <-chan amqp.Delivery) {
 		slog.Info("processDeliveries", "delivery_tag", delivery.DeliveryTag)
 		slog.Info("received", "delivery_type", delivery.Type)
 
-		// switch delivery.Type {
-		// case "image-embedded":
-		// 	var payload event.ImageEmbedded
+		switch delivery.Type {
+		case "journal":
+			var payload event.JournalEmbedded
 
-		// 	err := json.Unmarshal(delivery.Body, &payload)
-		// 	if err != nil {
-		// 		slog.Error("failed to Unmarshal message", err)
-		// 	}
+			err := json.Unmarshal(delivery.Body, &payload)
+			if err != nil {
+				slog.Error("failed to Unmarshal message", err)
+			}
 
-		// 	arg := db.UpdateImageEmbeddingStatusParams{
-		// 		ID:       	payload.ID,
-		// 		IsEmbedded: true,
-		// 	}
+			arg := db.UpdateJournalParams{
+				ID:        	payload.ID,
+				IsEmbedded: true,
+			}
 
-		// 	_, err = s.store.UpdateImageEmbeddingStatus(ctx, arg)
-		// 	if err != nil {
-		// 		if err = delivery.Reject(false); err != nil {
-		// 			slog.Error("failed to delivery.Reject", err)
-		// 		}
+			_, err = s.store.UpdateJournal(ctx, arg)
 
-		// 		slog.Error("failed to process delivery", err)
-		// 	} else {
-		// 		err = delivery.Ack(false)
-		// 		if err != nil {
-		// 			slog.Error("failed to acknowledge delivery", err)
-		// 		}
-		// 	}
-		// case "journal-updated":
-		// 	var payload event.JournalEmbedded
+			if err != nil {
+				if err = delivery.Reject(false); err != nil {
+					slog.Error("failed to delivery.Reject", err)
+				}
 
-		// 	err := json.Unmarshal(delivery.Body, &payload)
-		// 	if err != nil {
-		// 		slog.Error("failed to Unmarshal message", err)
-		// 	}
+				slog.Error("failed to process delivery", err)
+			} else {
+				err = delivery.Ack(false)
+				if err != nil {
+					slog.Error("failed to acknowledge delivery", err)
+				}
+			}
+		case "image":
+			var payload event.ImageEmbedded
 
-		// 	arg := db.UpdateJournalParams{
-		// 		ID:        	payload.ID,
-		// 		IsEmbedded: true,
-		// 	}
+			err := json.Unmarshal(delivery.Body, &payload)
+			if err != nil {
+				slog.Error("failed to Unmarshal message", err)
+			}
 
-		// 	_, err = s.store.UpdateJournal(ctx, arg)
+			arg := db.UpdateImageEmbeddingStatusParams{
+				ID:        	payload.ID,
+				IsEmbedded: true,
+			}
 
-		// 	if err != nil {
-		// 		if err = delivery.Reject(false); err != nil {
-		// 			slog.Error("failed to delivery.Reject", err)
-		// 		}
+			_, err = s.store.UpdateImageEmbeddingStatus(ctx, arg)
 
-		// 		slog.Error("failed to process delivery", err)
-		// 	} else {
-		// 		err = delivery.Ack(false)
-		// 		if err != nil {
-		// 			slog.Error("failed to acknowledge delivery", err)
-		// 		}
-		// 	}
-		// default:
-		// 	slog.Info("default")
-		// }
+			if err != nil {
+				if err = delivery.Reject(false); err != nil {
+					slog.Error("failed to delivery.Reject", err)
+				}
+
+				slog.Error("failed to process delivery", err)
+			} else {
+				err = delivery.Ack(false)
+				if err != nil {
+					slog.Error("failed to acknowledge delivery", err)
+				}
+			}
+		default:
+			slog.Info("default")
+		}
 	}
 
 	slog.Info("Deliveries channel closed")

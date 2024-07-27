@@ -9,7 +9,6 @@ import (
 	db "remind/journal/db/sqlc"
 	"remind/journal/gapi"
 
-	// "remind/journal/gapi"
 	"remind/journal/pb"
 	"remind/journal/util"
 
