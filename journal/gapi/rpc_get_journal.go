@@ -58,17 +58,37 @@ func (server *Server) QueryJournals(ctx context.Context, req *pb.QueryJournalsRe
 		limit = 10
 	}
 
-	arg := db.QueryJournalParams{
-		Username:  req.GetUsername(),
-		ToTsquery: req.GetSearch(),
-		Limit:     limit,
-		Offset:    req.GetOffset(),
+	var journalList []db.Journal
+	var err error
+
+	if req.GetSearch() == "" {
+		arg := db.GetJournalFromUserParams{
+			Username: req.GetUsername(),
+			Limit:    limit,
+			Offset:   req.GetOffset(),
+		}
+		journalList, err = server.store.GetJournalFromUser(ctx, arg)
+		if err != nil {
+			return nil, fmt.Errorf("cannot list journal: %v", err)
+		}
+	} else {
+		arg := db.QueryJournalParams{
+			Username:  req.GetUsername(),
+			ToTsquery: req.GetSearch(),
+			Limit:     limit,
+			Offset:    req.GetOffset(),
+		}
+		journalList, err = server.store.QueryJournal(ctx, arg)
+		if err != nil {
+			return nil, fmt.Errorf("cannot list journal: %v", err)
+		}
+
 	}
 
-	journalList, err := server.store.QueryJournal(ctx, arg)
-	if err != nil {
-		return nil, fmt.Errorf("cannot list journal: %v", err)
-	}
+	// journalList, err := server.store.QueryJournal(ctx, arg)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("cannot list journal: %v", err)
+	// }
 
 	pbJournalList := make([]*pb.Journal, 0, len(journalList))
 	for _, journal := range journalList {
