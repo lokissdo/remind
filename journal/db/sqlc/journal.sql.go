@@ -79,6 +79,47 @@ func (q *Queries) GetJournal(ctx context.Context, id int64) (Journal, error) {
 	return i, err
 }
 
+const getJournalFromUser = `-- name: GetJournalFromUser :many
+SELECT id, username, title, content, status, created_at, updated_at, is_embedded FROM journal
+WHERE username = $1
+LIMIT $2 OFFSET $3
+`
+
+type GetJournalFromUserParams struct {
+	Username string `json:"username"`
+	Limit    int32  `json:"limit"`
+	Offset   int32  `json:"offset"`
+}
+
+func (q *Queries) GetJournalFromUser(ctx context.Context, arg GetJournalFromUserParams) ([]Journal, error) {
+	rows, err := q.db.Query(ctx, getJournalFromUser, arg.Username, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Journal{}
+	for rows.Next() {
+		var i Journal
+		if err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.Title,
+			&i.Content,
+			&i.Status,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.IsEmbedded,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getJournalFromUserInTime = `-- name: GetJournalFromUserInTime :many
 SELECT id, username, title, content, status, created_at, updated_at, is_embedded FROM journal
 WHERE username = $1 AND updated_at >= $2 AND updated_at <= $3
