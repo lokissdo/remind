@@ -1,6 +1,7 @@
 package gapi
 
 import (
+	"encoding/base64"
 	db "remind/journal/db/sqlc"
 	"remind/journal/pb"
 
@@ -20,19 +21,21 @@ func convertJournal(journal db.Journal) (*pb.Journal) {
 }
 
 func convertImage(image db.Image) *pb.Image {
+	encodedImage := base64.StdEncoding.EncodeToString(image.Content)
 	return &pb.Image{
 		Id:        image.ID,
 		JournalId: image.JournalID,
-		Content:   image.Content,
+		Content:   encodedImage,
 		CreatedAt: timestamppb.New(image.CreatedAt),
 	}
 }
 
 func convertAudio(audio db.Audio) *pb.Audio {
+	encodedAudio := base64.StdEncoding.EncodeToString(audio.Content)
 	return &pb.Audio{
 		Id:        audio.ID,
 		JournalId: audio.JournalID,
-		Content:   audio.Content,
+		Content:   encodedAudio,
 		CreatedAt: timestamppb.New(audio.CreatedAt),
 	}
 }

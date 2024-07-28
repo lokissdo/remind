@@ -50,9 +50,13 @@ func (server *Server) CreateJournal(ctx context.Context, req *pb.CreateJournalRe
 	insertedImages := make([]*pb.Image, 0, len(imageList))
 	if len(imageList) > 0 {
 		for _, image := range imageList {
+			imageBytes, err := base64.StdEncoding.DecodeString(image)
+			if err != nil {
+				return nil, status.Errorf(codes.InvalidArgument, "failed to decode image: %v", err)
+			}
 			arg := db.CreateImageParams{
 				JournalID: journal.ID,
-				Content:   image,
+				Content:   imageBytes,
 			}
 			dbImage, err := server.store.CreateImage(ctx, arg)
 			if err == nil {
@@ -83,12 +87,13 @@ func (server *Server) CreateJournal(ctx context.Context, req *pb.CreateJournalRe
 	insertedAudios := make([]*pb.Audio, 0, len(audioList))
 	if len(audioList) > 0 {
 		for _, audio := range audioList {
+			audioBytes, err := base64.StdEncoding.DecodeString(audio)
 			if err != nil {
-				continue
+				return nil, status.Errorf(codes.InvalidArgument, "failed to decode audio: %v", err)
 			}
 			arg := db.CreateAudioParams{
 				JournalID: journal.ID,
-				Content:   audio,
+				Content:   audioBytes,
 			}
 			_, err = server.store.CreateAudio(ctx, arg)
 			if err == nil {
