@@ -6,7 +6,7 @@ proto:
 	--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
 	--openapiv2_out=doc/swagger --openapiv2_opt=allow_merge=true,merge_file_name=remind_journal \
 	proto/*.proto
-
+	
 migrate_up:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/journal?sslmode=disable" -verbose up $(level)
 

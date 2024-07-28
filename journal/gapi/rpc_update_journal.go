@@ -2,6 +2,7 @@ package gapi
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	db "remind/journal/db/sqlc"
 	"remind/journal/pb"
@@ -45,9 +46,14 @@ func (server *Server) AddImage(ctx context.Context, req *pb.AddImageRequest) (*p
 		return nil, fmt.Errorf("authorization failed: %v", err)
 	}
 
+	imageBytes, err := base64.StdEncoding.DecodeString(req.GetContent())
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode image: %v", err)
+	}
+
 	arg := db.CreateImageParams{
 		JournalID: req.GetJournalId(),
-		Content:   req.GetContent(),
+		Content:   imageBytes,
 	}
 
 	image, err := server.store.CreateImage(ctx, arg)
@@ -59,7 +65,7 @@ func (server *Server) AddImage(ctx context.Context, req *pb.AddImageRequest) (*p
 		Image: &pb.Image{
 			Id:        image.ID,
 			JournalId: image.JournalID,
-			Content:   image.Content,
+			Content:   req.GetContent(),
 		},
 	}, nil
 }
@@ -69,9 +75,14 @@ func (server *Server) AddAudio(ctx context.Context, req *pb.AddAudioRequest) (*p
 		return nil, fmt.Errorf("authorization failed: %v", err)
 	}
 
+	audioBytes, err := base64.StdEncoding.DecodeString(req.GetContent())
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode audio: %v", err)
+	}
+
 	arg := db.CreateAudioParams{
 		JournalID: req.GetJournalId(),
-		Content:   req.GetContent(),
+		Content:   audioBytes,
 	}
 
 	audio, err := server.store.CreateAudio(ctx, arg)
@@ -83,7 +94,7 @@ func (server *Server) AddAudio(ctx context.Context, req *pb.AddAudioRequest) (*p
 		Audio: &pb.Audio{
 			Id:        audio.ID,
 			JournalId: audio.JournalID,
-			Content:   audio.Content,
+			Content:  req.GetContent(),
 		},
 	}, nil
 }

@@ -13,7 +13,6 @@ produces:
 paths:
   /journal/v1/create_journal:
     security:
-      bearer:
   /journal/v1/update_journal:
     security:
       bearer:
@@ -26,6 +25,8 @@ paths:
   /journal/v1/query_journals:
     security:
       bearer:
+  /journal/v1/advanced_query_journals:
+    security:
   /journal/v1/add_image:
     security:
       bearer:

@@ -444,8 +444,7 @@
           "type": "string"
         },
         "content": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         }
       }
     },
@@ -468,8 +467,7 @@
           "type": "string"
         },
         "content": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         }
       }
     },
@@ -512,8 +510,7 @@
           "format": "int64"
         },
         "content": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         },
         "createdAt": {
           "type": "string",
@@ -539,15 +536,13 @@
         "images": {
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "byte"
+            "type": "string"
           }
         },
         "audios": {
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "byte"
+            "type": "string"
           }
         }
       }
@@ -610,8 +605,7 @@
           "format": "int64"
         },
         "content": {
-          "type": "string",
-          "format": "byte"
+          "type": "string"
         },
         "createdAt": {
           "type": "string",
