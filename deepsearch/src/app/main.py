@@ -92,8 +92,7 @@ def query_data(
     texts = get_document_database(app.state.bert_model, query)
     
     response = {
-        "images": [image.image_id for image in images],
-        "journals": [text.journal_id for text in texts]
+        "journals": [image.journal_id for image in images] + [text.journal_id for text in texts]
     }
     
     redis_manager.set(cache_key, json.dumps(response), app_config.cache_expire)

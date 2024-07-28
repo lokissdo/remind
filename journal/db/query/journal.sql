@@ -16,6 +16,7 @@ WHERE username = $1 AND updated_at >= $2 AND updated_at <= $3;
 -- name: GetJournalFromUser :many
 SELECT * FROM journal
 WHERE username = $1
+ORDER BY updated_at DESC
 LIMIT $2 OFFSET $3;
 
 -- name: QueryJournal :many

@@ -108,7 +108,6 @@ func (server *Server) QueryJournals(ctx context.Context, req *pb.QueryJournalsRe
 }
 
 type Response struct {
-	Images   []int64 `json:"images"`
 	Journals []int64 `json:"journals"`
 }
 
@@ -154,7 +153,7 @@ func (server *Server) AdvancedQueryJournals(ctx context.Context, req *pb.QueryJo
 	log.Info().Msgf("response: %v", body)
 
 	return &pb.AdvancedQueryJournalsResponse{
-		ImageId:  response.Images,
+		ImageId:  nil,
 		JournalId: response.Journals,
 	}, nil
 }
