@@ -85,18 +85,25 @@ func (server *Server) QueryJournals(ctx context.Context, req *pb.QueryJournalsRe
 
 	}
 
-	// journalList, err := server.store.QueryJournal(ctx, arg)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("cannot list journal: %v", err)
-	// }
-
 	pbJournalList := make([]*pb.Journal, 0, len(journalList))
 	for _, journal := range journalList {
 		pbJournalList = append(pbJournalList, convertJournal(journal))
 	}
 
+	pbImageList := make([]*pb.Image, 0)
+	for _, journal := range journalList {
+		iamgeList, err := server.store.GetImageOfJournal(ctx, journal.ID)
+		if err != nil {
+			return nil, fmt.Errorf("cannot get image list: %v", err)
+		}
+		for _, image := range iamgeList {
+			pbImageList = append(pbImageList, convertImage(image))
+		}
+	}
+
 	return &pb.QueryJournalsResponse{
 		Journals: pbJournalList,
+		Images:   pbImageList,
 	}, nil
 }
 
