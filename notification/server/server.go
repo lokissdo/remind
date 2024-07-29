@@ -5,6 +5,7 @@ import (
 	"remind/notification/database"
 	"remind/notification/firebase"
 	"remind/notification/model"
+	"strings"
 
 	"remind/notification/pb"
 	repository "remind/notification/repository"
@@ -27,8 +28,13 @@ func (s *Server) AddOrUpdateToken(ctx context.Context, req *pb.TokenRequest) (*p
 func (s *Server) SendMessage(ctx context.Context, req *pb.MessageRequest) (*pb.MessageResponse, error) {
 
 	var token model.FCMToken
-	err := database.FCMTokenCollection.FindOne(ctx, bson.M{"user_id": req.GetUserId()}).Decode(&token)
+	userID := req.GetUserId()
+	// remove start and end spaces in userID
+	userID = strings.TrimSpace(userID)
+
+	err := database.FCMTokenCollection.FindOne(ctx, bson.M{"user_id": userID}).Decode(&token)
 	if err != nil {
+		println("Error: ", err.Error())
 		return &pb.MessageResponse{
 			Success:      false,
 			ErrorMessage: err.Error(),

@@ -77,10 +77,5 @@ func validateCreateUserRequest(req *pb.CreateUserRequest) (violations []*errdeta
 	if err := validate.ValidateEmail(req.GetEmail()); err != nil {
 		violations = append(violations, fieldViolation("email", err))
 	}
-	for _, violation := range violations {
-		println("create_user_request." + violation.Field+ ":", violation.Description)
-	}
-	println("violations", len(violations))
-
 	return violations
 }
