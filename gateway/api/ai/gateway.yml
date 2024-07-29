@@ -1,0 +1,23 @@
+02info:
+  title: AI Service API
+  version: 1.0.0
+  description: Endpoint for AI Service
+  contact:
+    name: Do Khai Hung
+    email: dokhaihung2003@gmail.com
+endpoint: '0.0.0.0:5004'
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /ai/v1/generate_caption:
+    security:
+  /ai/v1/reformat_journal_entry:
+    security:
+  /ai/v1/generate_todos:
+    security:
+  /ai/v1/summarize_audio:
+    security:
+ 
+  

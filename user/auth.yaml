@@ -1,5 +1,5 @@
-# postgres: "postgres://remind_user:haFaMrzhWE0sFRMgHqdRrd6V4lBZniLY@dpg-cpduaf7sc6pc73970qk0-a.oregon-postgres.render.com/remind"
-postgres: "postgresql://root:secret@localhost:5432/remind?sslmode=disable"
+postgres: "postgresql://pgweb_owner:HQKUwuVPxq17@ep-dry-shape-a5f2ddxj-pooler.us-east-2.aws.neon.tech/remind?sslmode=require"
+#postgres: "postgresql://root:secret@localhost:5432/remind?sslmode=disable"
 migration_url: "file://db/migration"
 server_address:
   http: "0.0.0.0:5001"

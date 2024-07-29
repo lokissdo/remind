@@ -1,0 +1,6 @@
+salesforce-lavis
+deepspeech
+torch
+google-generativeai
+pydub
+protoc_gen_openapiv2

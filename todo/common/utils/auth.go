@@ -2,10 +2,9 @@ package utils
 
 import (
 	// "errors"
-	// "todo/models"
-	// "todo/repository"
+	// "remind/todo/models"
+	// "remind/todo/repository"
 	"unicode"
-
 	// "github.com/golang-jwt/jwt/v4"
 )
 
@@ -16,21 +15,21 @@ import (
 // 		return claim, errors.New("missing token")
 // 	}
 
-// 	token, err := jwt.ParseWithClaims(tokenSplit[1], &claim, func(token *jwt.Token) (interface{}, error) {
-// 		return []byte(configs.Yaml.JWT.Secret), nil
-// 	})
-// 	if err != nil || !token.Valid {
-// 		return claim, errors.New("token is invalid")
-// 	}
-// 	if claim.Type != tokenType {
-// 		return claim, errors.New("invalid token")
-// 	}
-// 	err = repository.RequiredAuth(claim)
-// 	if err != nil {
-// 		return claim, err
-// 	}
-// 	return claim, nil
-// }
+//		token, err := jwt.ParseWithClaims(tokenSplit[1], &claim, func(token *jwt.Token) (interface{}, error) {
+//			return []byte(configs.Yaml.JWT.Secret), nil
+//		})
+//		if err != nil || !token.Valid {
+//			return claim, errors.New("token is invalid")
+//		}
+//		if claim.Type != tokenType {
+//			return claim, errors.New("invalid token")
+//		}
+//		err = repository.RequiredAuth(claim)
+//		if err != nil {
+//			return claim, err
+//		}
+//		return claim, nil
+//	}
 func ValidatePassword(password string) bool {
 	if len(password) < 8 {
 		return false

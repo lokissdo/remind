@@ -39,3 +39,4 @@ paths:
   /journal/v1/delete_audio:
     security:
       bearer:
+  

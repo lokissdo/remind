@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+import "todo.proto";
+
+option go_package = "remind/todo/pb";
+
+message CreateTodoRequest {
+  Todo todo = 1;
+  string username = 2;
+  string FCMToken = 3;
+}
+
+message CreateTodoResponse {
+  Todo todo = 1;
+}

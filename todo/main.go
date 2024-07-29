@@ -1,17 +1,23 @@
 package main
 
 import (
-	"todo/api/middleware"
-	"todo/common/configs"
+	"log"
+	"net"
+	"remind/pkg/logger"
+	"remind/todo/api/middleware"
+	"remind/todo/common/configs"
+	"remind/todo/gin_service"
+	"remind/todo/service"
 
-	// _ "todo/repository"
+	// _ "remind/todo/repository"
 	//"todo
-	"fmt"
 	"os"
-	api "todo/api"
+	api "remind/todo/api"
+	pb "remind/todo/pb"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 )
 
 func setupRouter() *gin.Engine {
@@ -55,9 +61,28 @@ func setupLog() {
 
 }
 
+// func main() {
+// 	setupLog()
+
+// 	r := setupRouter()
+// 	r.Run(fmt.Sprintf(":%d", configs.Yaml.Port))
+// }
+
 func main() {
-	setupLog()
-	
-	r := setupRouter()
-	r.Run(fmt.Sprintf(":%d", configs.Yaml.Port))
+    port := ":5005"
+    lis, err := net.Listen("tcp", port)
+    if err != nil {
+        log.Fatalf("Failed to listen on port %v: %v", port, err)
+    }
+
+	grpcLogger := grpc.UnaryInterceptor(logger.GrpcLogger)
+
+	s := grpc.NewServer(grpcLogger)
+    pb.RegisterTodoServiceServer(s, &service.TodoServiceServer{})
+	// Run reminder cron job
+	go gin_service.RunReminderCronJob()
+    log.Printf("Server listening at %v", lis.Addr())
+    if err := s.Serve(lis); err != nil {
+        log.Fatalf("Failed to serve: %v", err)
+    }
 }

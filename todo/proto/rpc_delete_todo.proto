@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "remind/todo/pb";
+
+message DeleteTodoRequest {
+  string id = 1;
+  string username = 2;
+}
+
+message DeleteTodoResponse {
+  string message = 1;
+}

@@ -2,12 +2,13 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"log"
-	"todo/common/configs"
-	"todo/model"
-	pb "todo/pb"
+	"remind/notification/pb"
+	"remind/todo/common/configs"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func SendPendingReminders(ctx context.Context) error {
@@ -17,7 +18,7 @@ func SendPendingReminders(ctx context.Context) error {
     }
 
     // Connect to the notification service
-    conn, err := grpc.NewClient(configs.Yaml.Notification.URL, grpc.WithInsecure())
+    conn, err := grpc.NewClient(configs.Yaml.Notification.URL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 
     if err != nil {
@@ -28,7 +29,7 @@ func SendPendingReminders(ctx context.Context) error {
     // Create a client instance
     client := pb.NewNotificationServiceClient(conn)
 
-    sucessReminders := []model.Reminder{}
+    sucessReminders := []string{}
     for _, reminder := range reminders {
         // Prepare the request
         req := &pb.MessageRequest{
@@ -44,7 +45,7 @@ func SendPendingReminders(ctx context.Context) error {
             continue
         }
 
-        sucessReminders = append(sucessReminders, reminder)
+        sucessReminders = append(sucessReminders, reminder.ID)
         log.Printf("Notification sent successfully to user %s", reminder.UserID)
 
     }
@@ -57,3 +58,31 @@ func SendPendingReminders(ctx context.Context) error {
     return nil
 }
 
+func CreateOrUpdateFCMToken(ctx context.Context, userID, token string) error {
+     // Connect to the notification service
+     conn, err := grpc.NewClient(configs.Yaml.Notification.URL, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+
+     if err != nil {
+         return err
+     }
+     defer conn.Close()
+ 
+     // Create a client instance
+    client := pb.NewNotificationServiceClient(conn)
+     // Prepare the request
+     req := &pb.TokenRequest{
+        UserId: userID,
+        Token: token,
+    }
+    resp, err := client.AddOrUpdateToken(ctx, req)
+    if err != nil {
+        return err
+    }
+
+    if !resp.Success {
+        fmt.Println("Failed to updated token %s", resp.ErrorMessage)
+        return fmt.Errorf("Failed to add or update token for user %s", userID)
+    }
+    return nil
+}
