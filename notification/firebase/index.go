@@ -1,38 +1,37 @@
 package firebase
 
 import (
-    "context"
-    "firebase.google.com/go"
-    "firebase.google.com/go/messaging"
-	"google.golang.org/api/option"
-    "notification/common/configs"
-    "log"
-)
+	"context"
+	"log"
+	"remind/notification/common/configs"
 
+	firebase "firebase.google.com/go"
+	"firebase.google.com/go/messaging"
+	"google.golang.org/api/option"
+)
 
 var Client *messaging.Client
 
 func Init() error {
-    // Set up Firebase
-    opt := option.WithCredentialsFile(configs.Yaml.Firebase.GoogleApplicationCredentials)
-    app, err := firebase.NewApp(context.Background(), nil, opt)
-    if err != nil {
-        log.Println("Failed to create Firebase app: %v", err)
-        return err
-    }
+	// Set up Firebase
+	opt := option.WithCredentialsFile(configs.Yaml.Firebase.GoogleApplicationCredentials)
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		log.Println("Failed to create Firebase app: %v", err)
+		return err
+	}
 
-    // Initialize the messaging client
-    Client, err = app.Messaging(context.Background())
-    if err != nil {
-        log.Println("Failed to create Firebase messaging client: %v", err)
-        return err
-    }
-    test(app)
-    return nil
+	// Initialize the messaging client
+	Client, err = app.Messaging(context.Background())
+	if err != nil {
+		log.Println("Failed to create Firebase messaging client: %v", err)
+		return err
+	}
+	//test(app)
+	return nil
 }
 
-
-func test( app *firebase.App) {
+func test(app *firebase.App) {
 	ctx := context.Background()
 	client, err := app.Messaging(ctx)
 	if err != nil {
@@ -60,4 +59,3 @@ func test( app *firebase.App) {
 	// Response is a message ID string.
 	log.Println("Successfully sent message:", response)
 }
-

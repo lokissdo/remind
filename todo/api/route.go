@@ -1,8 +1,7 @@
 package api
 
 import (
-	"todo/api/middleware"
-	"todo/service"
+	service "remind/todo/gin_service"
 
 	"github.com/gin-gonic/gin"
 )

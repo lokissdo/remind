@@ -1,0 +1,30 @@
+02info:
+  title: Todo API
+  version: 1.0.0
+  description: Endpoint for todo management
+  contact:
+    name: Do Khai Hung
+    email: dokhaihung2003@gmail.com
+endpoint: '0.0.0.0:5004'
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /todo/v1/get_todo:
+    security:
+      bearer:
+  /todo/v1/update_todo:
+    security:
+      bearer:
+  /todo/v1/delete_todo:
+    security:
+      bearer:
+  /todo/v1/create_todo:
+    security:
+      bearer:
+  /todo/v1/list_todos:
+    security:
+      bearer:
+ 
+  

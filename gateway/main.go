@@ -22,8 +22,12 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	authgen "remind/auth/pb"
+	todogen "remind/todo/pb"
+
 	usergen "remind/user/pb"
 	journalgen "remind/journal/pb"
+	aigen "remind/ai/pb"
+
 )
 
 // gRPC Gateway
@@ -52,6 +56,18 @@ func newGateway(
 
 	journalEndpoint := fmt.Sprintf("%s:%d", cfg.JournalHost, cfg.JournalPort)
 	err = journalgen.RegisterJournalRemindHandlerFromEndpoint(ctx, mux, journalEndpoint, dialOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	todoEndpoint := fmt.Sprintf("%s:%d", cfg.TodoHost, cfg.TodoPort)
+	err = todogen.RegisterTodoServiceHandlerFromEndpoint(ctx, mux, todoEndpoint, dialOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	aiEndpoint := fmt.Sprintf("%s:%d", cfg.AIHost, cfg.AIPort)
+	err = aigen.RegisterAIServiceHandlerFromEndpoint(ctx, mux, aiEndpoint, dialOpts)
 	if err != nil {
 		return nil, err
 	}

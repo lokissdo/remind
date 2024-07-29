@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+import "todo.proto";
+
+option go_package = "remind/todo/pb";
+
+message ListTodosRequest {
+  string username = 1;
+}
+
+message ListTodosResponse {
+  repeated Todo todos = 1;
+}

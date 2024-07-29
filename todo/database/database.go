@@ -1,4 +1,3 @@
-
 package database
 
 import (
@@ -10,8 +9,8 @@ import (
 	"time"
 
 	// "database/sql"
-	"todo/common/configs"
-	// "todo/model"
+	"remind/todo/common/configs"
+	// "remind/todo/model"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

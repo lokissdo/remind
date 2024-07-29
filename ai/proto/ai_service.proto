@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+package pb;
+option go_package = "remind/ai/pb";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+      title: "AI Service API"
+      version: "1.0"
+      contact: {
+        name: "AI Service";
+        url: "https://github.com/lokissod/ai-service";
+        email: "dokhaihung2003@gmail.com";
+      };
+    };
+  };
+  
+  service AIService {
+    rpc GenerateCaption (TextRequest) returns (TextResponse) {
+      option (google.api.http) = {
+        post: "/ai/v1/generate_caption"
+        body: "*"
+      };
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        description: "Generate a caption for an image";
+        summary: "Generate Caption";
+      };
+    }
+  
+    rpc ReformatJournalEntry (TextRequest) returns (TextResponse) {
+      option (google.api.http) = {
+        post: "/ai/v1/reformat_journal_entry"
+        body: "*"
+      };
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        description: "Reformat a journal entry for correct grammar";
+        summary: "Reformat Journal Entry";
+      };
+    }
+  
+    rpc GenerateTodos (TextRequest) returns (TextResponse) {
+      option (google.api.http) = {
+        post: "/ai/v1/generate_todos"
+        body: "*"
+      };
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        description: "Generate todos based on a journal entry";
+        summary: "Generate Todos";
+      };
+    }
+  
+    rpc SummarizeAudio (TextRequest) returns (TextResponse) {
+      option (google.api.http) = {
+        post: "/ai/v1/summarize_audio"
+        body: "*"
+      };
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        description: "Summarize an audio file by transcribing it";
+        summary: "Summarize Audio";
+      };
+    }
+  }
+  
+  message TextRequest {
+    string text = 1;
+  }
+  message TextResponse {
+    string text = 1;
+  }

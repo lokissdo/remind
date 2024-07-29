@@ -3,20 +3,21 @@ package main
 import (
 	"log"
 	"net"
-	"notification/server"
+	"remind/notification/server"
+	"remind/pkg/logger"
 
-	pb "notification/pb"
+	pb "remind/notification/pb"
 
-	"notification/database"
-	"notification/firebase"
+	"remind/notification/database"
+	"remind/notification/firebase"
 
 	"google.golang.org/grpc"
 )
 
-
 func main() {
 
 	firebase.Init()
+	print("Firebase initialized")
 	database.Init()
 	// Listen on a TCP port
 	lis, err := net.Listen("tcp", ":50051")
@@ -26,8 +27,9 @@ func main() {
 
 	log.Println("Server started on port localhost:50051")
 	// Create a new gRPC server
-	s := grpc.NewServer()
+	grpcLogger := grpc.UnaryInterceptor(logger.GrpcLogger)
 
+	s := grpc.NewServer(grpcLogger)
 	// Register your server with the gRPC server
 	pb.RegisterNotificationServiceServer(s, &server.Server{})
 

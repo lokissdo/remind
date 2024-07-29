@@ -9,4 +9,4 @@ school_id: sch-f921853e-e89a-4527-b421-bfff80d641d3
 redis:
   connection: "123213123131"
 notification:
-  url: "http://localhost:8080"
+  url: "localhost:50051"

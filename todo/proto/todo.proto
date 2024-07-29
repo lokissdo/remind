@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "remind/todo/pb";
+
+message Todo {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  google.protobuf.Timestamp start_time = 4;
+  google.protobuf.Timestamp end_time = 5;
+  string user_id = 6;
+  repeated Reminder reminders = 7;
+}
+
+message Reminder {
+  string id = 1;
+  google.protobuf.Timestamp start = 2;
+  string message = 3;
+  string todo_id = 4;
+  string user_id = 5;
+  bool sent = 6;
+}

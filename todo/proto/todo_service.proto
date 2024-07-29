@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/api/annotations.proto";
+import "rpc_create_todo.proto";
+import "rpc_update_todo.proto";
+import "rpc_get_todo.proto";
+import "rpc_list_todos.proto";
+import "rpc_delete_todo.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "remind/todo/pb";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Remind Todo Service API"
+    version: "1.0"
+    contact: {
+      name: "Remind Todo";
+      url: "https://github.com/lokissdo/todo-reminder";
+      email: "dokhaihung2003@gmail.com";
+    };
+  };
+};
+
+service TodoService {
+  rpc CreateTodo (CreateTodoRequest) returns (CreateTodoResponse) {
+    option (google.api.http) = {
+      post: "/todo/v1/create_todo"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to create a new todo";
+      summary: "Create new todo";
+    };
+  }
+
+  rpc UpdateTodo (UpdateTodoRequest) returns (UpdateTodoResponse) {
+    option (google.api.http) = {
+      patch: "/todo/v1/update_todo"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to update an existing todo";
+      summary: "Update todo";
+    };
+  }
+
+  rpc GetTodoByID (GetTodoByIDRequest) returns (GetTodoByIDResponse) {
+    option (google.api.http) = {
+      get: "/todo/v1/get_todo"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get a todo by ID";
+      summary: "Get todo by ID";
+    };
+  }
+
+  rpc ListTodos (ListTodosRequest) returns (ListTodosResponse) {
+    option (google.api.http) = {
+      get: "/todo/v1/list_todos"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to list all todos for a user";
+      summary: "List todos";
+    };
+  }
+
+  rpc DeleteTodo (DeleteTodoRequest) returns (DeleteTodoResponse) {
+    option (google.api.http) = {
+      delete: "/todo/v1/delete_todo"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete a todo by ID";
+      summary: "Delete todo";
+    };
+  }
+}

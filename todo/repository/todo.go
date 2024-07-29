@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"todo/database"
-	"todo/model"
+	"remind/todo/database"
+	"remind/todo/model"
 )
 
 // CreateTodo creates a new todo
@@ -13,11 +13,10 @@ func CreateTodo(todo model.Todo) (model.Todo, error) {
 	return todo, nil
 }
 
-
 func ListAllTodosByUserID(userID string) ([]model.Todo, error) {
 
 	var todos []model.Todo
-	if err := database.Db.Where("user_id = ?", userID).Find(&todos).Error; err != nil {
+	if err := database.Db.Preload("Reminders").Where("user_id = ?", userID).Find(&todos).Error; err != nil {
 		return nil, err
 	}
 	return todos, nil

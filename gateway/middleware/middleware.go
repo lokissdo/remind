@@ -86,7 +86,7 @@ func AuthMiddleWare(next http.Handler, securityConfigs map[string]SecurityConfig
 				http.Error(w, "unauthorized", http.StatusUnauthorized)
 				return
 			}
-			
+			println("username", username)
 			r.Header.Set("Grpc-Metadata-username", username)
 		}
 		next.ServeHTTP(w, r)
